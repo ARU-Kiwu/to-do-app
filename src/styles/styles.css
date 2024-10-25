@@ -1,0 +1,15 @@
+:root {
+        --background: #1E1E1E;
+        --background-secondary: #252526;
+        --background-accent: #333333;
+        --text-color: #fbfbfd;
+        --primary:#0577E4;
+    
+    
+        --border: var(--border-width-mid) var(--border-style) var(--border-color);
+        --border-width-mid:2px; 
+        --border-style: solid; 
+        --border-color: rgba(251, 251, 253, 0.255);
+    
+        --border-radius: 7px;
+}
