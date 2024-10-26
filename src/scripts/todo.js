@@ -1,6 +1,6 @@
-const projects = {}
+export const projects = {}
 
-class Project { 
+export class Project { 
     constructor(name, icon, id) {
         this.name = name;
         this.icon = icon;
@@ -15,7 +15,7 @@ class Project {
 
 }
 
-class ToDo {
+export class ToDo {
     constructor(title, description, dueDate, priority, id) {
         this.title = title
         this.description = description
@@ -35,18 +35,18 @@ class ToDo {
 
 }
 
-function createProject(name, icon) {
+export function createProject(name, icon) {
     const id = Date.now().toString()
     const project = new Project(name, icon, id)
     projects[id] = project
     return project
 }
 
-function deleteProject(id) {
+export function deleteProject(id) {
     delete projects[id];
 }
 
-function addTodoToProject(projectId, title, description, dueDate, priority) {
+export function addTodoToProject(projectId, title, description, dueDate, priority) {
     const project = projects[projectId];
     if (project) {
         const todo = new ToDo(title, description, dueDate, priority);
@@ -54,7 +54,7 @@ function addTodoToProject(projectId, title, description, dueDate, priority) {
     }
 }
 
-function deleteTodoFromProject(projectId, todoIndex) {
+export function deleteTodoFromProject(projectId, todoIndex) {
     const project = projects[projectId];
     if (project && project.todos[todoIndex]) {
         project.todos.splice(todoIndex, 1); // Remove the todo by index
