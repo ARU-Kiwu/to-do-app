@@ -13,16 +13,21 @@ export class Project {
         this.todos.push(todo)
     }
 
+    addToDoneList(todo) {
+        const doneTodo = this.todos.splice(todo, 1)
+        this.done.push(doneTodo)
+    }
+
 }
 
 export class ToDo {
-    constructor(title, description, dueDate, priority, id) {
+    constructor(title, description, dueDate, priority) {
         this.title = title
         this.description = description
         this.dueDate = dueDate
         this.priority = priority
         this.completed = false
-        this.id = id
+        this.id = Date.now().toString()
     }
 
     setDone() {
@@ -54,9 +59,25 @@ export function addTodoToProject(projectId, title, description, dueDate, priorit
     }
 }
 
-export function deleteTodoFromProject(projectId, todoIndex) {
+export function deleteTodoFromProject(projectId, todoId) {
     const project = projects[projectId];
-    if (project && project.todos[todoIndex]) {
-        project.todos.splice(todoIndex, 1); // Remove the todo by index
+    console.log(projects[projectId].indexOf(todoId))
+}
+
+export function setTodoCompleted(projectId, todoId) {
+    const project = projects[projectId];
+    
+    if (project) {
+
+        const todoIndex = project.todos.findIndex(todo => todo.id === todoId);
+
+        if (todoIndex !== -1) { // Check if the todo was found
+            const todo = project.todos[todoIndex];
+            todo.setDone()
+            const completedTodo = project.todos.splice(todoIndex, 1)
+            project.done.push(completedTodo[0])
+            // You can return the index if needed
+            return todoIndex;
+        } 
     }
 }

@@ -1,4 +1,4 @@
-import { addTodoToProject, deleteProject } from "./todo"
+import { addTodoToProject, deleteProject, setTodoCompleted } from "./todo"
 
 export function createProjectIcon(icon) {
     const iconEl = generateIcon(icon)
@@ -61,13 +61,19 @@ export function generateProjectPage(project) {
     addTodoButton.addEventListener('click', () => {
       addTodoToProject(project.id, todoInput.value, undefined, undefined, undefined)
       renderTodos(project)
-      console.log(project)
     });
 
+    
     const todoContainer = document.createElement('div')
     todoContainer.classList.add('todo-container')
 
-    projectPageContainer.append(todoInput, addTodoButton, todoContainer);
+    // Create a completed section where you can see all the completed tasks
+    const completedTitle = document.createElement('h4')
+    completedTitle.textContent = 'Completed'
+    const completedToDosContainer = document.createElement('div')
+    completedToDosContainer.classList.add('completed-todo')
+    completedToDosContainer.append(completedTitle)
+    projectPageContainer.append(todoInput, addTodoButton, todoContainer, completedToDosContainer);
 }
 
 export function renderTodos(project) {
@@ -75,40 +81,97 @@ export function renderTodos(project) {
     const container = document.querySelector('.todo-container'); // Ensure this container exists in your HTML
     container.innerHTML = ''; // Clear previous contents
 
+    const completedContainer = document.querySelector('.completed-todo'); // Ensure this container exists in your HTML
+    completedContainer.innerHTML = ''; // Clear previous contents
+  
      // Loop through each ToDo in the project
-     project.todos.forEach(todo => {
+     project.todos.forEach((todo, index) => {
+
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo');
+
+        todoDiv.setAttribute('data', `${index}`)
+
+
+        const todoHeader = document.createElement('div')
+        
+        //Create to do checkbox for setting the todo complete
+        const checkbox = document.createElement('input')
+        todo.completed === true ? checkbox.checked = true : checkbox.checked = false;
+        checkbox.setAttribute('type', 'checkbox')
+        checkbox.addEventListener('change', ()=> {
+            setTodoCompleted(project.id, todo.id)
+            renderTodos(project)
+        })
+        todoHeader.append(checkbox)
 
         // Create and append title element
         const titleEl = document.createElement('h4');
         titleEl.textContent = `Title: ${todo.title}`;
-        todoDiv.appendChild(titleEl);
+        todoHeader.appendChild(titleEl);
+
+        const infoWrapper = document.createElement('div')
+        infoWrapper.classList.add('todo-wrapper')
 
         // Create and append description element
         const descEl = document.createElement('p');
         descEl.textContent = `Description: ${todo.description}`;
-        todoDiv.appendChild(descEl);
+        infoWrapper.appendChild(descEl);
 
         // Create and append due date element
         const dueDateEl = document.createElement('p');
         dueDateEl.textContent = `Due Date: ${todo.dueDate}`;
-        todoDiv.appendChild(dueDateEl);
+        infoWrapper.appendChild(dueDateEl);
 
         // Create and append priority element
         const priorityEl = document.createElement('p');
         priorityEl.textContent = `Priority: ${todo.priority}`;
-        todoDiv.appendChild(priorityEl);
+        infoWrapper.appendChild(priorityEl);
 
         // Create and append status element
         const statusEl = document.createElement('p');
         statusEl.textContent = `Completed: ${todo.completed ? 'Yes' : 'No'}`;
-        todoDiv.appendChild(statusEl);
-
+        infoWrapper.appendChild(statusEl);
+        todoDiv.append(todoHeader)
+        todoDiv.append(infoWrapper)
         container.append(todoDiv)
     });
 
+    // // Loop through completed todos 
+     project.done.forEach((todo, index) => {
+       // Create a div for each completed todo item
+       const todoDiv = document.createElement('div');
+       todoDiv.classList.add('completed-todo');
+
+       // Create a checkbox and mark it as checked
+       const checkbox = document.createElement('input');
+       checkbox.type = 'checkbox';
+       checkbox.checked = todo.completed;
+       todoDiv.appendChild(checkbox);
+
+       // Create a title element with strikethrough style
+       const title = document.createElement('span');
+       title.textContent = `${todo.title}`;
+       todoDiv.appendChild(title);
+
+       // Create a delete button
+       const deleteButton = document.createElement('button');
+       deleteButton.textContent = 'Delete';
+       deleteButton.addEventListener('click', () => {
+           // Remove the todo from the done array
+           project.done.splice(index, 1);
+           renderTodos(project)
+       });
+       todoDiv.appendChild(deleteButton);
+
+       // Append the completed todo item to the container
+       completedContainer.appendChild(todoDiv);
+    });
+
 }
+
+
+
 
 
 
