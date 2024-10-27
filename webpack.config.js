@@ -19,6 +19,16 @@ module.exports = {
         type: 'asset/resource',
       },
       {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: 'fonts/[name].[ext]',
+            outputPath: 'fonts/'
+          }
+       } 
+      },
+      {
         test: /\.mp4$/,
         use: [
           {
@@ -46,7 +56,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       // favicon: 'src/favicon.ico',
-      title: 'toDo App',
+      title: 'Memoriso',
       template: 'src/index.html'
     }),
   ],
