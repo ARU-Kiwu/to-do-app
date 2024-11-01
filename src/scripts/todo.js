@@ -10,12 +10,12 @@ export class Project {
     }
 
     addToDo(todo) {
-        this.todos.push(todo)
+        this.todos.push(todo);
     }
 
     addToDoneList(todo) {
         const doneTodo = this.todos.splice(todo, 1)
-        this.done.push(doneTodo)
+        this.done.push(doneTodo);
     }
 
 }
@@ -73,9 +73,9 @@ export function setTodoCompleted(projectId, todoId) {
 
         if (todoIndex !== -1) { // Check if the todo was found
             const todo = project.todos[todoIndex];
-            todo.setDone()
-            const completedTodo = project.todos.splice(todoIndex, 1)
-            project.done.push(completedTodo[0])
+            todo.setDone();
+            const completedTodo = project.todos.splice(todoIndex, 1);
+            project.done.push(completedTodo[0]);
             // You can return the index if needed
             return todoIndex;
         } 
