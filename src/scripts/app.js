@@ -1,4 +1,4 @@
-import { generateIcon } from "./dom"
+import { createProjectDialog, generateIcon } from "./dom"
 
 export function app() {
     const app = document.querySelector('#app')
@@ -11,10 +11,15 @@ export function app() {
         addProjectContainer.setAttribute('data-addProject', '')
 
             const addProjectButtonText = document.createElement('span')
-            addProjectButtonText.textContent = 'Create A project'
+            addProjectButtonText.textContent = 'Create a project'
             const addProjectIcon = generateIcon('add')
 
         addProjectContainer.append(addProjectButtonText, addProjectIcon)    
+
+        //Create Project Logic
+        addProjectContainer.addEventListener('click', ()=> {
+            createProjectDialog()
+        })
 
         const projectsDisplayContainer = document.createElement('div')
         projectsDisplayContainer.setAttribute('data-projectDisplay', '')
