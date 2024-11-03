@@ -1,5 +1,5 @@
 import { addTodoToProject, createProject, deleteProject, projects, setTodoCompleted } from "./todo"
-
+import { format, compareAsc } from "date-fns";
 export function createProjectIcon(icon) {
     const iconEl = generateIcon(icon)
     return iconEl
@@ -102,8 +102,25 @@ export function generateIcon(icon) {
        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M21 11.9999C20.7348 11.9999 20.4804 12.1053 20.2929 12.2928C20.1054 12.4804 20 12.7347 20 12.9999V18.9999C20 19.2652 19.8946 19.5195 19.7071 19.707C19.5196 19.8946 19.2652 19.9999 19 19.9999H5C4.73478 19.9999 4.48043 19.8946 4.29289 19.707C4.10536 19.5195 4 19.2652 4 18.9999V4.99994C4 4.73472 4.10536 4.48037 4.29289 4.29283C4.48043 4.1053 4.73478 3.99994 5 3.99994H11C11.2652 3.99994 11.5196 3.89458 11.7071 3.70705C11.8946 3.51951 12 3.26516 12 2.99994C12 2.73472 11.8946 2.48037 11.7071 2.29283C11.5196 2.1053 11.2652 1.99994 11 1.99994H5C4.20435 1.99994 3.44129 2.31601 2.87868 2.87862C2.31607 3.44123 2 4.20429 2 4.99994V18.9999C2 19.7956 2.31607 20.5587 2.87868 21.1213C3.44129 21.6839 4.20435 21.9999 5 21.9999H19C19.7956 21.9999 20.5587 21.6839 21.1213 21.1213C21.6839 20.5587 22 19.7956 22 18.9999V12.9999C22 12.7347 21.8946 12.4804 21.7071 12.2928C21.5196 12.1053 21.2652 11.9999 21 11.9999ZM6 12.7599V16.9999C6 17.2652 6.10536 17.5195 6.29289 17.707C6.48043 17.8946 6.73478 17.9999 7 17.9999H11.24C11.3716 18.0007 11.5021 17.9755 11.6239 17.9257C11.7457 17.8759 11.8566 17.8026 11.95 17.7099L18.87 10.7799L21.71 7.99994C21.8037 7.90698 21.8781 7.79637 21.9289 7.67452C21.9797 7.55266 22.0058 7.42195 22.0058 7.28994C22.0058 7.15793 21.9797 7.02722 21.9289 6.90536C21.8781 6.7835 21.8037 6.6729 21.71 6.57994L17.47 2.28994C17.377 2.19621 17.2664 2.12182 17.1446 2.07105C17.0227 2.02028 16.892 1.99414 16.76 1.99414C16.628 1.99414 16.4973 2.02028 16.3754 2.07105C16.2536 2.12182 16.143 2.19621 16.05 2.28994L13.23 5.11994L6.29 12.0499C6.19732 12.1434 6.12399 12.2542 6.07423 12.376C6.02446 12.4979 5.99924 12.6283 6 12.7599ZM16.76 4.40994L19.59 7.23994L18.17 8.65994L15.34 5.82994L16.76 4.40994ZM8 13.1699L13.93 7.23994L16.76 10.0699L10.83 15.9999H8V13.1699Z" fill="black"/>
 </svg>
+       ` ,
+       priority:`
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.4 6L14 4H5V21H7V14H12.6L13 16H20V6H14.4Z" fill="black"/>
+</svg>
+       `,
+       date: `
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_642_13)">
+<path d="M12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2ZM12 6C11.7348 6 11.4804 6.10536 11.2929 6.29289C11.1054 6.48043 11 6.73478 11 7V12C11.0001 12.2652 11.1055 12.5195 11.293 12.707L14.293 15.707C14.4816 15.8892 14.7342 15.99 14.9964 15.9877C15.2586 15.9854 15.5094 15.8802 15.6948 15.6948C15.8802 15.5094 15.9854 15.2586 15.9877 14.9964C15.99 14.7342 15.8892 14.4816 15.707 14.293L13 11.586V7C13 6.73478 12.8946 6.48043 12.7071 6.29289C12.5196 6.10536 12.2652 6 12 6Z" fill="black"/>
+</g>
+<defs>
+<clipPath id="clip0_642_13">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+</defs>
+</svg>
 
-       ` 
+       `
     }
 
      const iconEl = document.createElement('div')
@@ -124,6 +141,7 @@ export function generateProjectPage(project) {
     
     // Title element
     const projectTitleElement = document.createElement('h2');
+    projectTitleElement.setAttribute('data', `${project.id}`)
     projectTitleElement.textContent = project.name;
     projectPageHeader.append(projectTitleElement);
 
@@ -355,7 +373,6 @@ export function createProjectDialog() {
             iconSelectionMenu.append(icon)
             icon.addEventListener('click', ()=> {
                 const selectedIcon = document.querySelector('.selectedIcon')
-                console.log(icon.attributes)
                 const newIcon = generateIcon(icon.attributes[1].nodeValue)
                 selectedIcon.innerHTML = ''
                 selectedIcon.append(newIcon)
@@ -383,7 +400,7 @@ export function createProjectDialog() {
         const icon = iconSelectionContainer.querySelector('[data-icon]').attributes[1].nodeValue
         title === '' ? title = 'No title set' : title = titleInput.value
         const project =  createProject(title, icon)
-        console.log(projects)
+
         renderProjectsIcons(projects)
         dialog.remove()
         appendingContainer.classList.remove('active')
@@ -404,10 +421,11 @@ export function createProjectDialog() {
     return dialog
 }
 
-export function createAddToDoDialog() {
+export function createAddToDoDialog(project) {
     const appendingContainer = document.querySelector('[data-dialog]')
     appendingContainer.classList.add('active')
     const dialog = document.createElement('dialog')
+    dialog.classList.add('to-do-dialog')
 
     const modalHeader = document.createElement('div')
     modalHeader.classList.add('modal-header')
@@ -422,16 +440,127 @@ export function createAddToDoDialog() {
 
     modalHeader.append(modalTitle, closeButton)
 
-    const inputContainer = document.createElement('div')
-    
-    const taskTitle = document.createElement('input')
-    const taskDescription = document.createElement('textarea')
-    const taskPriorityContainer = document.createElement('div')
-    const taskDueContainer = document.createElement('div')
+    const inputContainer = document.createElement('div');
+    inputContainer.classList.add('input-container')
+        const taskTitle = document.createElement('input');
+        taskTitle.placeholder = 'What do you have to do?';
 
+        const taskDescription = document.createElement('textarea');
+        taskDescription.placeholder = 'Describe the task'
+
+        const infoContainer = document.createElement('div');
+
+        const taskPriorityContainer = document.createElement('div');
+        taskPriorityContainer.classList.add('task-priority-container')
+
+        const defaultPriorityContainer = document.createElement('div');
+        
+        const priorityIcon = generateIcon('priority');
+        priorityIcon.setAttribute('data-priority', 'none');
+
+        const priorityText = document.createElement('span')
+        priorityText.textContent = 'None'
+
+        const priorityMenu = document.createElement('div')
+        defaultPriorityContainer.addEventListener('click', (e)=> {
+            priorityMenu.classList.add('menu-active')
+            defaultPriorityContainer.classList.add('outlined')
+        })
+
+        document.addEventListener('click', (e) => {
+            // Check if the click was outside the menu and container
+            if (!priorityMenu.contains(e.target) && !defaultPriorityContainer.contains(e.target)) {
+                priorityMenu.classList.remove('menu-active');
+                defaultPriorityContainer.classList.remove('outlined');
+            }
+        });
+
+        priorityMenu.classList.add('priority-menu')
+        defaultPriorityContainer.append(priorityIcon, priorityText)
+        defaultPriorityContainer.classList.add('priority-container')
+        taskPriorityContainer.append( defaultPriorityContainer, priorityMenu)
+
+        const priorities = ['None', 'Low', 'Medium', 'High']
+
+        function generatePriorityIcons(priorities) {
+            priorities.forEach(priority => {
+                const priorityContainer = document.createElement('div')
+
+                const priorityIcon = generateIcon('priority')
+                const priorityText = document.createElement('span')
+                priorityText.textContent = priority
+
+                priorityIcon.setAttribute('data-priority', `${priority}`);
+
+                priorityContainer.append(priorityIcon, priorityText)
+
+                priorityContainer.addEventListener('click', ()=> {
+                    defaultPriorityContainer.innerHTML = '';
+                    const icon = generateIcon('priority');
+                    icon.setAttribute('data-priority', `${priority}`);
+                    const text = document.createElement('span');
+                    text.textContent = priority;
+                    defaultPriorityContainer.append(icon, text);
+                    priorityMenu.classList.remove('menu-active');
+                    defaultPriorityContainer.classList.remove('outlined')
+                })
+
+                priorityMenu.append(priorityContainer)
+            })
+        }
+
+        generatePriorityIcons(priorities)
+
+        const taskDueContainer = document.createElement('div');
+        taskDueContainer.classList.add('due')
+       
+        const dateInput = document.createElement('input')
+        dateInput.type = 'date'
+        dateInput.setAttribute('value', `${format(new Date(), "yyyy-MM-dd")}`)
+        
+        const dateInputText = document.createElement('span')
+        dateInputText.classList.add('date-text')
+        dateInputText.textContent = dateInput.value
+
+        taskDueContainer.addEventListener('click', ()=> {
+            dateInput.showPicker ? dateInput.focus() : dateInput.blur();
+            dateInput.showPicker()
+        });
+
+        taskDueContainer.addEventListener('input', ()=> {
+             dateInputText.textContent = dateInput.value
+             dateInput.blur()
+        });
+
+        const dateIcon = generateIcon('date')
+       
+        taskDueContainer.append(dateIcon,dateInput, dateInputText)
+
+        infoContainer.append(taskDueContainer, taskPriorityContainer);
+        inputContainer.append(taskTitle, taskDescription, infoContainer);
+
+    const buttonsContainer = document.createElement('div')
+
+    const createToDoButton = document.createElement('button')
+    createToDoButton.textContent = 'Create To Do'
+    
+    createToDoButton.addEventListener('click', ()=> {
+        const projectId = document.querySelector('.project-page-header h2').attributes[0].value
+        const project = projects[projectId]
+        const title = document.querySelector('.input-container > input').value
+        const description = document.querySelector('.input-container > textarea').value
+        const due = document.querySelector('input[type="date"]').value
+        const priority = document.querySelector('.priority-container span').innerText
+        console.log(projectId, title, description, due, priorities)
+        addTodoToProject(projectId, title, description, due, priority)
+        renderTodos(project)
+        dialog.remove()
+    })
+
+    buttonsContainer.append(createToDoButton)
 
     const wrapper = document.createElement('div')
-    wrapper.append(modalHeader)
+    wrapper.append(modalHeader, inputContainer, buttonsContainer)
     dialog.append(wrapper)
     appendingContainer.append(dialog)
 
