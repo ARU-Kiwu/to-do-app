@@ -1,4 +1,6 @@
-import { createProjectDialog, generateIcon } from "./dom"
+import { createProjectDialog, generateIcon, generateProjectPage, renderProjectsIcons } from "./dom"
+import { projects } from "./todo"
+
 
 export function app() {
     const app = document.querySelector('#app')
@@ -6,7 +8,7 @@ export function app() {
     // Create the project container where you can see all of your current projects
     const projectsContainer = document.createElement('div')
     projectsContainer.setAttribute('data-projects', '')
-
+    
         const addProjectContainer = document.createElement('button')
         addProjectContainer.setAttribute('data-addProject', '')
 
@@ -38,5 +40,7 @@ export function app() {
     dialogBoxContainer.setAttribute('data-dialog', '')
 
     app.append(projectsContainer, projectPageContainer, dialogBoxContainer)
+
+    renderProjectsIcons(projects)
 }
 

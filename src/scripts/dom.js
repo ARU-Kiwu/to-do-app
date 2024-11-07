@@ -1,5 +1,8 @@
+import { saveData } from "./storage";
 import { addTodoToProject, createProject, deleteProject, projects, setTodoCompleted } from "./todo"
-import { format, compareAsc } from "date-fns";
+import { format, compareAsc, formatDistance, toDate, startOfToday} from "date-fns";
+import gsap from "gsap";
+
 export function createProjectIcon(icon) {
     const iconEl = generateIcon(icon)
     return iconEl
@@ -119,6 +122,11 @@ export function generateIcon(icon) {
 </clipPath>
 </defs>
 </svg>
+       `,
+       expand: `
+       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.5 4.75L10 12.25L2.5 4.75L1 6.25L10 15.25L19 6.25L17.5 4.75Z" fill="black"/>
+</svg>
 
        `
     }
@@ -152,6 +160,7 @@ export function generateProjectPage(project) {
         projectPageContainer.innerHTML = ''; // Clear the project page
         deleteProject(project.id);
         deleteProjectIcon(project);
+        saveData()
     });
 
     // Edit button
@@ -170,8 +179,18 @@ export function generateProjectPage(project) {
         renderTodos(project)
      })
 
+     const completedTodosInfo = document.createElement('div')
+     completedTodosInfo.classList.add('completedTodosNumber')
+     const completedTodosText = document.createElement('p')
+     completedTodosText.setAttribute('completed-todos', '')
+     completedTodosInfo.append(completedTodosText)
+
     const completedButton = document.createElement('button')
+    completedButton.addEventListener('click', ()=> {
+        renderCompletedTodos(project)
+    })
     completedButton.textContent = 'Completed'
+    completedButton.append(completedTodosInfo)
 
     const addToDoButtonContainer = document.createElement('div')
     const addToDoButton = generateIcon('add')
@@ -217,7 +236,9 @@ export function renderProjectIcon(project) {
     projectIconElement.append(projectIcon, projectTitleText)
      //Generate Project Page with its to-dos
      projectIconElement.addEventListener('click', ()=> {
-        generateProjectPage(project)
+        console.log(project)
+         generateProjectPage(project)
+         if(project.done.length > 0) {setCompletedDisplayOn(project)} 
         renderTodos(project)
     })
 
@@ -235,11 +256,9 @@ export function renderTodos(project) {
 
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo');
-
-        todoDiv.setAttribute('data', `${index}`)
-
-
-        const todoHeader = document.createElement('div')
+        todoDiv.setAttribute('data', `${index}`);
+        todoDiv.classList.add(`${todo.priority}`);
+        const todoHeader = document.createElement('div');
         
         //Create to do checkbox for setting the todo complete
         const checkbox = document.createElement('input')
@@ -247,40 +266,55 @@ export function renderTodos(project) {
         checkbox.setAttribute('type', 'checkbox')
         checkbox.addEventListener('change', ()=> {
             setTodoCompleted(project.id, todo.id)
+            saveData()
             renderTodos(project)
+            setCompletedDisplayOn(project)
         })
-        todoHeader.append(checkbox)
 
-        // Create and append title element
-        const titleEl = document.createElement('h4');
-        titleEl.textContent = `Title: ${todo.title}`;
-        todoHeader.appendChild(titleEl);
+         // Create and append title element
+         const titleElement = document.createElement('h4');
+         titleElement.textContent = `${todo.title}`;
+         todoHeader.appendChild(titleElement);
 
-        const infoWrapper = document.createElement('div')
-        infoWrapper.classList.add('todo-wrapper')
+
+         //Create the edit icon
+         const editIcon = generateIcon('edit')
+         todoHeader.append(checkbox, titleElement, editIcon)
+        const additionalInfoContainer = document.createElement('div');
+
+        const priorityInfoContainer = document.createElement('div');
+        priorityInfoContainer.classList.add('priority-info');
+
+        const priorityIcon = generateIcon('priority');
+        priorityIcon.setAttribute('data-priority', `${todo.priority}`);
+        const priorityText = document.createElement('span');
+        priorityText.textContent = todo.priority;
+
+        priorityInfoContainer.append(priorityIcon, priorityText)
+
+        const dueTimeInfoContainer = document.createElement('div');
+        const dueIcon = generateIcon('date');
+        console.log(todo.dueDate);
+        const dueText = formatDistance( startOfToday(), toDate(new Date(`${todo.dueDate}`)));
+        dueTimeInfoContainer.classList.add('deadline-info');
+
+        const descriptionExpandIcon = generateIcon('expand');
+        
+        dueTimeInfoContainer.append(dueIcon, dueText);
+        additionalInfoContainer.append(priorityInfoContainer, dueTimeInfoContainer, descriptionExpandIcon);
 
         // Create and append description element
+        const descriptionElement = document.createElement('div')
         const descEl = document.createElement('p');
-        descEl.textContent = `Description: ${todo.description}`;
-        infoWrapper.appendChild(descEl);
-
-        // Create and append due date element
-        const dueDateEl = document.createElement('p');
-        dueDateEl.textContent = `Due Date: ${todo.dueDate}`;
-        infoWrapper.appendChild(dueDateEl);
-
-        // Create and append priority element
-        const priorityEl = document.createElement('p');
-        priorityEl.textContent = `Priority: ${todo.priority}`;
-        infoWrapper.appendChild(priorityEl);
-
-        // Create and append status element
-        const statusEl = document.createElement('p');
-        statusEl.textContent = `Completed: ${todo.completed ? 'Yes' : 'No'}`;
-        infoWrapper.appendChild(statusEl);
-        todoDiv.append(todoHeader)
-        todoDiv.append(infoWrapper)
-        container.append(todoDiv)
+        descEl.textContent = `${todo.description}`;
+        descriptionExpandIcon.addEventListener('click', ()=> {
+            descriptionElement.classList.toggle('expanded')
+        })
+        todoDiv.append(todoHeader);
+        todoDiv.append(additionalInfoContainer);
+        descriptionElement.append(descEl)
+        todoDiv.appendChild(descriptionElement);
+        container.append(todoDiv);
     });
 
 }
@@ -308,18 +342,28 @@ export function renderCompletedTodos(project) {
     title.textContent = `${todo.title}`;
     todoDiv.appendChild(title);
 
+
+
     // Create a delete button
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
+    const deleteButton = generateIcon('delete')
     deleteButton.addEventListener('click', () => {
+       console.log(project.done.length)
         // Remove the todo from the done array
         project.done.splice(index, 1);
-        renderTodos(project)
+        console.log(project.done.length)
+        renderProjectsIcons(projects)
+        if(project.done.length <= 0) {
+            setCompletedDisplayOff(project)
+            renderCompletedTodos(project)
+            return
+        }
+        renderCompletedTodos(project)
+        setCompletedDisplayOn(project)
     });
     todoDiv.appendChild(deleteButton);
 
     // Append the completed todo item to the container
-    completedContainer.appendChild(todoDiv);
+    container.appendChild(todoDiv);
  });
 
 }
@@ -400,7 +444,7 @@ export function createProjectDialog() {
         const icon = iconSelectionContainer.querySelector('[data-icon]').attributes[1].nodeValue
         title === '' ? title = 'No title set' : title = titleInput.value
         const project =  createProject(title, icon)
-
+        saveData()
         renderProjectsIcons(projects)
         dialog.remove()
         appendingContainer.classList.remove('active')
@@ -420,6 +464,7 @@ export function createProjectDialog() {
     appendingContainer.append(dialog)
     return dialog
 }
+
 
 export function createAddToDoDialog(project) {
     const appendingContainer = document.querySelector('[data-dialog]')
@@ -504,7 +549,6 @@ export function createAddToDoDialog(project) {
                     priorityMenu.classList.remove('menu-active');
                     defaultPriorityContainer.classList.remove('outlined')
                 })
-
                 priorityMenu.append(priorityContainer)
             })
         }
@@ -547,13 +591,20 @@ export function createAddToDoDialog(project) {
     createToDoButton.addEventListener('click', ()=> {
         const projectId = document.querySelector('.project-page-header h2').attributes[0].value
         const project = projects[projectId]
-        const title = document.querySelector('.input-container > input').value
-        const description = document.querySelector('.input-container > textarea').value
+        let title = document.querySelector('.input-container > input').value
+        let description = document.querySelector('.input-container > textarea').value
         const due = document.querySelector('input[type="date"]').value
         const priority = document.querySelector('.priority-container span').innerText
         console.log(projectId, title, description, due, priorities)
-        addTodoToProject(projectId, title, description, due, priority)
+        
+        title === '' ? title = 'Nothing specified' : title = document.querySelector('.input-container > input').value
+        description === '' ?  description = 'No description set' : description = document.querySelector('.input-container > textarea').value
+
+        // Add to do 
+        addTodoToProject(projectId, title, description, due, priority);
+        saveData()
         renderTodos(project)
+        appendingContainer.classList.remove('active')
         dialog.remove()
     })
 
@@ -563,9 +614,20 @@ export function createAddToDoDialog(project) {
     wrapper.append(modalHeader, inputContainer, buttonsContainer)
     dialog.append(wrapper)
     appendingContainer.append(dialog)
+}
 
-   
 
+export function setCompletedDisplayOn(project) {
+    const display = document.querySelector('.completedTodosNumber')
+    display.classList.add('active')
+
+    const text = document.querySelector('[completed-todos]')
+    text.textContent = project.done.length
+}
+
+export function setCompletedDisplayOff(project) {
+    const completedToDosDisplay = document.querySelector('.completedTodosNumber.active')
+    completedToDosDisplay.classList.remove('active')
 }
 
 

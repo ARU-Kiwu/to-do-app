@@ -19,6 +19,9 @@ body {
         box-sizing: border-box;
 }
 
+
+
+
 :root {
         --background: #1E1E1E;
         --background-secondary: #252526;
@@ -69,6 +72,11 @@ body {
     
         --button-border-radius: 5px;
         --button-padding: 7px 30px;
+
+        --no-priority: var(var(--primary));
+        --low-priority: rgb(68, 214, 68);
+        --medium-priority: rgb(255, 185, 55);
+        --high-priority: rgb(255, 66, 66);
     } */
 
 
@@ -111,17 +119,18 @@ body {
 }
 
 [data-projects] {
+        position: sticky;
+        max-height: 100vh;
         display: flex;
         flex-direction: column;
         gap: var(--section-gutter);
         grid-row: 1;
         grid-column: 1/2;
-
-        &>div {
+        & > div {
                 border: var(--border);
         }
 }
-
+ 
 [data-addproject] {
         border: thin solid var(--border-primary-color);
         display: flex;
@@ -360,7 +369,7 @@ button {
                 }
         }
 
-        >div {
+        > div {
                 display: flex;
                 gap: 10px;
         }
@@ -403,10 +412,175 @@ button {
         background: var(--background-shade);
 }
 
+.filters button:nth-of-type(2) {
+        position: relative;
+}
+
+.filters button:nth-of-type(2) .completedTodosNumber {
+        justify-content: center;
+        align-items: center;
+        display: none;
+        --size: 20px;
+        position: absolute;
+        top: -3.5px;
+        right: -7.5px; 
+        border-radius: 9999vh;
+        height: var(--size);
+        width: var(--size);
+        background: var(--primary);
+        content: '';
+        border: thin solid var(--border-primary-color);
+}
+
+.completedTodosNumber.active {
+        display: flex !important;
+}
+
+.completed-todo{
+        display: flex;
+        align-items: center;
+        gap:10px;
+        span {
+                flex: 1 1 auto;
+                text-decoration: line-through;
+        }
+
+        input {
+                color-scheme: dark;
+                width: 15px; /* Width of the checkbox */
+                height: 15px; /* Height of the checkbox */
+                accent-color: #4A90E2; /* Color of the checkbox when checked */
+                cursor: pointer; /* Adds a pointer cursor */
+                border-radius: 4px; /* Optional: round corners for a custom look */
+                transition: transform 0.2s ease-in-out;
+                }
+
+                [data-icon] svg path {
+                        fill: var(--primary);
+                }
+}
+
 .to-dos {
         display: flex;
         flex: 1 1 auto;
+        flex-direction: column;
+        padding: 20px;
+        gap: 10px;
+        
 }
+
+.todo {
+        position: relative;
+        padding: 10px;
+        border: var(--border);
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        flex-direction: column;
+        border-radius: var(--border-radius);
+}
+
+.todo > div:nth-of-type(1) {
+        input {
+        color-scheme: dark;
+        width: 15px; /* Width of the checkbox */
+        height: 15px; /* Height of the checkbox */
+        accent-color: #4A90E2; /* Color of the checkbox when checked */
+        cursor: pointer; /* Adds a pointer cursor */
+        border-radius: 4px; /* Optional: round corners for a custom look */
+        transition: transform 0.2s ease-in-out;
+        }
+
+        /* Optional: Change the size on hover */
+        input[type="checkbox"]:hover {
+        transform: scale(1.1); /* Grows slightly on hover */
+    }
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        h4 {
+                flex: 1 1 auto;
+                padding: 10px;
+        }
+
+        [data-icon] svg {
+                --size: 20px;
+                height: var(--size);
+                width: var(--size);
+        }
+        [data-icon] svg path {
+                fill: var(--primary);
+        }
+       
+}
+
+.todo > div:nth-of-type(2) {
+        padding: 5px 0;
+        [data="expand"] {
+               padding: 5px;
+               width: max-content !important;
+        }
+        display: flex;
+        gap: 7px;
+        > div {
+                width: 150px;
+                display: flex;
+                max-width: 150px;
+                padding: 5px 15px;
+                background: var(--background-accent);
+                border-radius: var(--border-radius);
+                align-items: center;
+                font-size: 10px;
+                gap: 7px
+        }
+
+        [data-icon] svg {
+                --size: 15px;
+                height: var(--size);
+                width:  var(--size);
+        }
+        [data-icon] svg path{
+                fill: var(--primary);
+        }
+}
+
+
+.todo > div:nth-of-type(3) p{
+        font-size: 14px;
+        color: rgba(220, 220, 220, 0.683) ;
+        opacity: 0;
+        height: 0;
+        width: 100%;
+        transition: all 0.1s linear; 
+}
+
+.todo > div:nth-of-type(3).expanded p{
+        opacity: 1;
+        padding-top: 5px;
+        height: max-content;
+        width: 100%;
+}
+
+.todo.Low {
+        [data-icon] svg path{
+        fill: var(--low-priority) !important;
+       }
+}
+
+.todo.Medium {
+        [data-icon] svg path{
+        fill: var(--medium-priority) !important;
+       }
+}
+
+.todo.High {
+        [data-icon] svg path{
+        fill: var(--high-priority) !important;
+       }
+}
+
+
 
 .to-do-dialog > div {
         gap: 10px;
@@ -619,12 +793,13 @@ button {
                 align-items: center;
                 flex: 1 1 auto;
                 gap: 10px;
-                background: var(--background-secondary);
+                background: var(--background-shade);
                 border: var(--border);
                 border-radius: var(--border-radius);
                 padding: 7px 18px;
 
                 [data-icon] {
+                        background: none;
                         border: none;
                         height: fit-content;
                         width: fit-content;
@@ -640,3 +815,12 @@ button {
                 border-color: var(--primary);
         }
 }
+
+
+
+
+
+/* ================*/
+/* ===ANIMATIONS===*/
+/* ================*/
+
