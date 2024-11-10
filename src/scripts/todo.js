@@ -68,15 +68,39 @@ export function setTodoCompleted(projectId, todoId) {
     const project = projects[projectId];
     
     if (project) {
-
+        // Find the index of the todo that needs to be marked as completed
         const todoIndex = project.todos.findIndex(todo => todo.id === todoId);
 
         if (todoIndex !== -1) { // Check if the todo was found
             const todo = project.todos[todoIndex];
-            todo.setDone();
-            const completedTodo = project.todos.splice(todoIndex, 1);
-            project.done.push(completedTodo[0]);
-            // You can return the index if needed
+            todo.setDone();  // Mark the todo as done (this method needs to exist on your todo object)
+
+            // Remove the todo from the 'todos' array and add it to the 'done' array
+            const completedTodo = project.todos.splice(todoIndex, 1)[0]; // Remove and get the todo
+            project.done.push(completedTodo);  // Add to 'done' array
+
+            // Optionally return the index of the removed todo
+            return todoIndex;
+        } 
+    }
+}
+
+export function setTodoUncompleted(projectId, todoId) {
+    const project = projects[projectId];
+    
+    if (project) {
+        // Find the index of the todo that needs to be marked as uncompleted
+        const todoIndex = project.done.findIndex(todo => todo.id === todoId);
+
+        if (todoIndex !== -1) { // Check if the todo was found
+            const todo = project.done[todoIndex];
+            todo.setUndone();  // Mark the todo as undone (this method needs to exist on your todo object)
+
+            // Remove the todo from the 'done' array and add it to the 'todos' array
+            const uncompletedTodo = project.done.splice(todoIndex, 1)[0]; // Remove and get the todo
+            project.todos.push(uncompletedTodo);  // Add back to 'todos' array
+
+            // Optionally return the index of the moved todo
             return todoIndex;
         } 
     }

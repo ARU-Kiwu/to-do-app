@@ -7,7 +7,7 @@
 [] - Redesign Modal
 [] - Add color themes
 [] - Add task UI
-[] - Add task description dropdown || modal
+[x] - Add task description dropdown || modal
 
 =============================
 ====    FUNCTIONALITY    ====
@@ -15,7 +15,7 @@
 
 [] - Add delete project Modal
 [] - Add edit project modal
-[] - Add saves to localstorage
+[x] - Add saves to localstorage
 [] - Add settings
 [] - Add timer for each task
 
