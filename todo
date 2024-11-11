@@ -13,7 +13,7 @@
 ====    FUNCTIONALITY    ====
 =============================
 
-[] - Add delete project Modal
+[x] - Add delete project Modal
 [] - Add edit project modal
 [x] - Add saves to localstorage
 [] - Add settings

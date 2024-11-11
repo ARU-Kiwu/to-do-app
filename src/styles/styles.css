@@ -636,7 +636,35 @@ button {
        }
 }
 
+.delete-project-icon-container {
+        display: flex;
+        align-items: center;   
+        justify-content: center; 
+        gap: 10px;
+}
 
+
+
+.buttons-container {
+        display: flex;
+        gap:8px;
+        align-items: center;
+        justify-content: center;
+        button {
+                padding: var(--button-padding);
+                flex: 1  1 auto;
+        }
+
+        button:first-of-type {
+                background-color: var(--primary);
+        };
+}
+
+.text-container{
+        display: flex;
+        align-items: center;  
+        justify-content: center;
+}
 
 .to-do-dialog > div {
         gap: 10px;

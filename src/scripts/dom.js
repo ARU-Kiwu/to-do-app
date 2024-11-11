@@ -160,14 +160,7 @@ export function generateProjectPage(project) {
     // Delete button
     const deleteButton = generateIcon('delete')
     deleteButton.addEventListener('click', () => {
-        const items = document.querySelectorAll('[data-project-page] > div')
-        console.log(items)
-        slideUp(items, gsap, ()=> {
-            projectPageContainer.innerHTML = ''; // Clear the project page
-            deleteProject(project.id);
-            removeProjectIcon(project.id);
-            saveData()
-        })
+        deleteProjectDialog(project)
     });
 
     // Edit button
@@ -714,7 +707,81 @@ export function truncateString(str, maxLen) {
     }
     return str.toString();
   }
+
+export function deleteProjectDialog(project) {
+    const appendingContainer = document.querySelector('[data-dialog]')
+    appendingContainer.classList.add('active')
+    const dialog = document.createElement('dialog')
+    dialog.classList.add('delete-project')
+
+    const wrapper = document.createElement('div')
+
+    const modalHeader = document.createElement('div')
+    modalHeader.classList.add('modal-header')
+    const modalTitle = document.createElement('span')
+    modalTitle.textContent = 'Delete a project'
+
+    const closeButton = generateIcon('close')
+    closeButton.addEventListener('click', () => {
+        slideUp(wrapper, gsap, ()=> {
+            dialog.remove()
+            appendingContainer.classList.remove('active')
+        })
+    })
+
+    const firstTextContainer = document.createElement('div')
+    const textOne = document.createElement('span')
+    textOne.innerHTML = `Are you sure you want to delete`
+    firstTextContainer.append(textOne)
+    firstTextContainer.classList.add('text-container')
+
+    const iconContainer = document.createElement('div')
+    iconContainer.classList.add('delete-project-icon-container')
+    const icon = generateIcon(`${project.icon}`)
+    iconContainer.append(icon)
+
+    const textContainer = document.createElement('div')
+    const text = document.createElement('span')
+    text.innerHTML = `<b>${project.name}</b> project?`
+    textContainer.append(text)
+    textContainer.classList.add('text-container')
+
+    const buttonsContainer = document.createElement('div')
+    const secondaryCancelButton = document.createElement('button')
+    secondaryCancelButton.textContent = 'Cancel'
+    secondaryCancelButton.addEventListener('click', ()=> {
+        slideUp(wrapper, gsap, ()=> {
+            dialog.remove()
+            appendingContainer.classList.remove('active')
+        })
+    })
+    const confirmButton = document.createElement('button')
+    confirmButton.textContent = 'Confirm'
+    confirmButton.addEventListener('click', ()=> {
+        const items = document.querySelectorAll('[data-project-page] > div')
+        const projectPageContainer = document.querySelector('[data-project-page]')
+        slideUp(items, gsap, ()=> {
+            projectPageContainer.innerHTML = ''; // Clear the project page
+            deleteProject(project.id);
+            removeProjectIcon(project.id);
+            saveData()
+            slideUp(wrapper, gsap, ()=> {
+                dialog.remove()
+                appendingContainer.classList.remove('active')
+            })
+        })
+    })
+
+    buttonsContainer.append(secondaryCancelButton, confirmButton)
+    buttonsContainer.classList.add('buttons-container')
+
+    modalHeader.append(modalTitle, closeButton);
+    wrapper.append(modalHeader, firstTextContainer ,iconContainer, textContainer, buttonsContainer);
+    dialog.append(wrapper);
+    appendingContainer.append(dialog);
+}
   
+
 
 
 
