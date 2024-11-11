@@ -166,7 +166,7 @@ export function generateProjectPage(project) {
     // Edit button
     const editButton = generateIcon('edit');
     editButton.addEventListener('click', () => {
-        // Edit Project Logic
+        editProjectDialog(project)
     });
 
     const filterContainer = document.createElement('div');
@@ -226,7 +226,6 @@ export function renderProjectsIcons(projects) {
 
     for (let project of Object.values(projects)) {
         const icon = renderProjectIcon(project) 
-        
         projectdisplay.append(icon)
     }
 }
@@ -303,6 +302,9 @@ export function renderTodos(project) {
 
         //Create the edit icon
         const editIcon = generateIcon('edit')
+        editIcon.addEventListener('click', ()=> {
+            editToDoDialog(project, todo)
+        })
         todoHeader.append(checkbox, titleElement, editIcon)
         const additionalInfoContainer = document.createElement('div');
 
@@ -318,7 +320,6 @@ export function renderTodos(project) {
 
         const dueTimeInfoContainer = document.createElement('div');
         const dueIcon = generateIcon('date');
-        console.log(todo.dueDate);
         const dueText = formatDistance(startOfToday(), toDate(new Date(`${todo.dueDate}`)));
         dueTimeInfoContainer.classList.add('deadline-info');
 
@@ -780,9 +781,275 @@ export function deleteProjectDialog(project) {
     dialog.append(wrapper);
     appendingContainer.append(dialog);
 }
-  
 
+export function editProjectDialog(project) {
+    const appendingContainer = document.querySelector('[data-dialog]');
+    appendingContainer.classList.add('active');
+    const dialog = document.createElement('dialog');
+    const wrapper = document.createElement('div');
+    slideDown(wrapper, gsap);
 
+    const modalHeader = document.createElement('div');
+    modalHeader.classList.add('modal-header');
+    const modalTitle = document.createElement('span');
+    modalTitle.textContent = 'Edit Project';
+
+    const closeButton = generateIcon('close');
+    closeButton.addEventListener('click', () => {
+        slideUp(wrapper, gsap, () => {
+            appendingContainer.classList.remove('active');
+            dialog.remove();
+        });
+    });
+
+    modalHeader.append(modalTitle, closeButton);
+
+    const inputContainer = document.createElement('div');
+    inputContainer.classList.add('input-container');
+
+    const iconSelectionContainer = document.createElement('div');
+    iconSelectionContainer.classList.add('icon-selection');
+
+    const selectedIcon = document.createElement('div');
+    selectedIcon.classList.add('selectedIcon');
+
+    // Add selection menu logic
+    iconSelectionContainer.addEventListener('click', (event) => {
+        if (iconSelectionMenu.classList.contains('menu-active')) { return }
+        event.stopPropagation();
+        iconSelectionMenu.classList.toggle('menu-active');
+        expandFromTopLeft(iconSelectionMenu, gsap);
+        
+        document.addEventListener('click', (event) => {
+            if (!iconSelectionMenu.contains(event.target) && !iconSelectionContainer.contains(event.target)) {
+                iconSelectionMenu.classList.remove('menu-active');
+            }
+        });
+    });
+
+    let defaultIcon = generateIcon(project.icon || 'default'); // Set the current project icon
+    const iconSelectionMenu = document.createElement('div');
+    iconSelectionMenu.classList.add('icon-selection-menu');
+    
+    const icons = [
+        generateIcon('default'), generateIcon('star'), generateIcon('gym'), generateIcon('learn'),
+        generateIcon('shop'), generateIcon('pen'), generateIcon('flower'), generateIcon('travel'),
+        generateIcon('idea'), generateIcon('file'), generateIcon('movie'), generateIcon('code'),
+    ];
+    icons.forEach(icon => {
+        iconSelectionMenu.append(icon);
+        icon.addEventListener('click', () => {
+            collapseToTopLeft(iconSelectionMenu, gsap, () => {
+                iconSelectionMenu.classList.remove('menu-active');
+                selectedIcon.innerHTML = '';
+                const newIcon = generateIcon(icon.attributes[1].nodeValue);
+                selectedIcon.append(newIcon);
+                revealIcon(icon, gsap);
+            });
+        });
+    });
+    selectedIcon.append(defaultIcon);
+    iconSelectionContainer.append(selectedIcon, iconSelectionMenu);
+
+    const projectTitleInputContainer = document.createElement('div');
+    const titleInput = document.createElement('input');
+    titleInput.setAttribute('type', 'text');
+    titleInput.placeholder = 'Project Title';
+    titleInput.value = project.name || ''; // Set the current project title
+    projectTitleInputContainer.append(titleInput);
+
+    inputContainer.append(iconSelectionContainer, projectTitleInputContainer);
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('button-container');
+
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'Save';
+    saveButton.addEventListener('click', () => {
+        let title = titleInput.value || 'No title set';
+        const icon = selectedIcon.querySelector('[data-icon]').attributes[1].nodeValue;
+        project.name = title;
+        project.icon = icon;
+
+        saveData();
+        renderProjectsIcons(projects);
+        generateProjectPage(project)
+        dialog.remove();
+        appendingContainer.classList.remove('active');
+    });
+
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.addEventListener('click', () => {
+        slideUp(wrapper, gsap, () => {
+            appendingContainer.classList.remove('active');
+            dialog.remove();
+        });
+    });
+
+    buttonContainer.append(cancelButton, saveButton);
+
+    wrapper.append(modalHeader, inputContainer, buttonContainer);
+
+    dialog.append(wrapper);
+    dialog.setAttribute('open', '');
+    appendingContainer.append(dialog);
+    return dialog;
+}
+
+export function editToDoDialog(project, todo) {
+    const appendingContainer = document.querySelector('[data-dialog]');
+    appendingContainer.classList.add('active');
+    const dialog = document.createElement('dialog');
+    dialog.classList.add('to-do-dialog');
+
+    const modalHeader = document.createElement('div');
+    modalHeader.classList.add('modal-header');
+    const modalTitle = document.createElement('span');
+    modalTitle.textContent = 'Edit Task';
+
+    const closeButton = generateIcon('close');
+    closeButton.addEventListener('click', () => {
+        slideUp(wrapper, gsap, () => {
+            dialog.remove();
+            appendingContainer.classList.remove('active');
+        });
+    });
+
+    modalHeader.append(modalTitle, closeButton);
+
+    const inputContainer = document.createElement('div');
+    inputContainer.classList.add('input-container');
+
+    const taskTitle = document.createElement('input');
+    taskTitle.placeholder = 'What do you have to do?';
+    taskTitle.maxLength = 35;
+    taskTitle.value = todo.title || ''; // Prefill with existing title
+
+    const taskDescription = document.createElement('textarea');
+    taskDescription.placeholder = 'Describe the task';
+    taskDescription.maxLength = 150;
+    taskDescription.value = todo.description || ''; // Prefill with existing description
+
+    const infoContainer = document.createElement('div');
+
+    const taskPriorityContainer = document.createElement('div');
+    taskPriorityContainer.classList.add('task-priority-container');
+
+    const defaultPriorityContainer = document.createElement('div');
+    const priorityIcon = generateIcon('priority');
+    priorityIcon.setAttribute('data-priority', todo.priority || 'none'); // Prefill with existing priority
+    const priorityText = document.createElement('span');
+    priorityText.textContent = todo.priority || 'None';
+
+    const priorityMenu = document.createElement('div');
+    defaultPriorityContainer.addEventListener('click', (e) => {
+        priorityMenu.classList.add('menu-active');
+        defaultPriorityContainer.classList.add('outlined');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!priorityMenu.contains(e.target) && !defaultPriorityContainer.contains(e.target)) {
+            priorityMenu.classList.remove('menu-active');
+            defaultPriorityContainer.classList.remove('outlined');
+        }
+    });
+
+    priorityMenu.classList.add('priority-menu');
+    defaultPriorityContainer.append(priorityIcon, priorityText);
+    defaultPriorityContainer.classList.add('priority-container');
+    taskPriorityContainer.append(defaultPriorityContainer, priorityMenu);
+
+    const priorities = ['None', 'Low', 'Medium', 'High'];
+
+    function generatePriorityIcons(priorities) {
+        priorities.forEach(priority => {
+            const priorityContainer = document.createElement('div');
+
+            const priorityIcon = generateIcon('priority');
+            const priorityText = document.createElement('span');
+            priorityText.textContent = priority;
+
+            priorityIcon.setAttribute('data-priority', `${priority}`);
+
+            priorityContainer.append(priorityIcon, priorityText);
+
+            priorityContainer.addEventListener('click', () => {
+                defaultPriorityContainer.innerHTML = '';
+                const icon = generateIcon('priority');
+                icon.setAttribute('data-priority', `${priority}`);
+                const text = document.createElement('span');
+                text.textContent = priority;
+                defaultPriorityContainer.append(icon, text);
+                priorityMenu.classList.remove('menu-active');
+                defaultPriorityContainer.classList.remove('outlined');
+            });
+            priorityMenu.append(priorityContainer);
+        });
+    }
+
+    generatePriorityIcons(priorities);
+
+    const taskDueContainer = document.createElement('div');
+    taskDueContainer.classList.add('due');
+
+    const dateInput = document.createElement('input');
+    dateInput.type = 'date';
+    dateInput.setAttribute('value', todo.due || format(new Date(), "yyyy-MM-dd")); // Prefill with existing due date
+
+    const dateInputText = document.createElement('span');
+    dateInputText.classList.add('date-text');
+    dateInputText.textContent = dateInput.value;
+    console.log(dateInput.value)
+
+    taskDueContainer.addEventListener('click', () => {
+        dateInput.showPicker ? dateInput.focus() : dateInput.blur();
+        dateInput.showPicker();
+    });
+
+    taskDueContainer.addEventListener('input', () => {
+        dateInputText.textContent = dateInput.value;
+        dateInput.blur();
+    });
+
+    const dateIcon = generateIcon('date');
+
+    taskDueContainer.append(dateIcon, dateInput, dateInputText);
+
+    infoContainer.append(taskDueContainer, taskPriorityContainer);
+    inputContainer.append(taskTitle, taskDescription, infoContainer);
+
+    const buttonsContainer = document.createElement('div');
+
+    const saveToDoButton = document.createElement('button');
+    saveToDoButton.textContent = 'Save Changes';
+
+    saveToDoButton.addEventListener('click', () => {
+        const title = taskTitle.value || 'Nothing specified';
+        const description = taskDescription.value || 'No description set';
+        const due = dateInput.value;
+        const priority = defaultPriorityContainer.querySelector('span').innerText;
+
+        // Update the existing to-do item
+        todo.title = title;
+        todo.description = description
+        todo.dueDate = due;
+        todo.priority = priority;
+
+        saveData();
+        renderTodos(project);
+        appendingContainer.classList.remove('active');
+        dialog.remove();
+    });
+
+    buttonsContainer.append(saveToDoButton);
+
+    const wrapper = document.createElement('div');
+    wrapper.append(modalHeader, inputContainer, buttonsContainer);
+    dialog.append(wrapper);
+    slideDown(wrapper, gsap);
+    appendingContainer.append(dialog);
+}
 
 
 

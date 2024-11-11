@@ -3,7 +3,7 @@
 =============================
 
 [x] - Add more icons
-[] - Add animations
+[x] - Add animations
 [] - Redesign Modal
 [] - Add color themes
 [] - Add task UI
@@ -14,7 +14,7 @@
 =============================
 
 [x] - Add delete project Modal
-[] - Add edit project modal
+[x] - Add edit project modal
 [x] - Add saves to localstorage
 [] - Add settings
 [] - Add timer for each task
