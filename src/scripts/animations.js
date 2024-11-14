@@ -176,7 +176,6 @@ export function slideTodosToRight(gsap) {
 
 
 
-
    
 
   

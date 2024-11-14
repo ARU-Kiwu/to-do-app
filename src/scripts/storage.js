@@ -39,3 +39,21 @@ export function loadData() {
         });
     }
 }
+
+// Function to save the theme in local storage
+export function saveThemeToLocalStorage(theme) {
+    localStorage.setItem('theme', theme);
+}
+
+// Function to get the theme from local storage
+export function getThemeFromLocalStorage() {
+    return localStorage.getItem('theme');
+}
+
+// Function to apply the theme from local storage as a class on the document
+export function applyThemeFromLocalStorage() {
+    const theme = getThemeFromLocalStorage();
+    if (theme) {
+        document.documentElement.classList.add(theme);
+    }
+}

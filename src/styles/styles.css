@@ -20,7 +20,9 @@ body {
 }
 
 
-
+html {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
 :root {
         --background: #1E1E1E;
@@ -52,25 +54,28 @@ body {
         --high-priority: rgb(255, 66, 66);
 }
 
-/* :root {
-        --background: #1e1a25;
-        --background-secondary: #2b2735;
-        --background-shade: #332e3d;
-        --background-accent: #40384b;
-        --text-color: #f2eef8;
-        --primary: #a371f7;
-        --primary-darker: #8d5dc9;
-        --primary-subtle: hsla(265, 65%, 60%, 0.45);
-        
+
+:root.default {
+        --background: #1E1E1E;
+        --background-secondary: #252526;
+        --background-shade: #272729;
+        --background-accent: #333333;
+        --background-hover: #2e2e2f;
+        --text-color: #fbfbfd;
+        --primary: #0577E4;
+        --primary-darker: #0865bc;
+        --primary-subtle: hsla(209, 92%, 38%, 0.45);
+
         --section-gutter: 10px;
         --section-border-radius: 7px;
-        
+
         --border: thin var(--border-style) var(--background-accent);
-        --border-style: solid; 
-        --border-primary-color: rgba(242, 238, 248, 0.25);
-    
+        --border-style: solid;
+        --border-primary-color: rgba(251, 251, 253, 0.255);
+
         --border-radius: 7px;
-    
+
+
         --button-border-radius: 5px;
         --button-padding: 7px 30px;
 
@@ -78,8 +83,224 @@ body {
         --low-priority: rgb(68, 214, 68);
         --medium-priority: rgb(255, 185, 55);
         --high-priority: rgb(255, 66, 66);
-    } */
+}
 
+:root.red {
+        --background: #2a1b20; /* Dark reddish background */
+        --background-secondary: #3a232a; /* Slightly lighter reddish background */
+        --background-shade: #472a34; /* Mid-tone reddish shade */
+        --background-accent: #56323f; /* Accent with a red tint */
+        --text-color: #f2eef8;
+    
+        /* Intensified Solar Red Theme */
+        --primary: #ff2e2e; /* Bright Solar Red */
+        --primary-darker: #cc2525; /* Darker Solar Red */
+        --primary-subtle: rgba(255, 46, 46, 0.2); /* Transparent Solar Red */
+    
+        /* Priority Colors */
+        --no-priority: var(--primary);
+        --low-priority: #44d644;
+        --medium-priority: #ffb937;
+        --high-priority: #ff5656;
+    
+        /* Accent Colors */
+        --accent-color: #ff4747; /* Slightly softened red */
+        --highlight-color: #ff6b6b; /* Lighter red for emphasis */
+        --shadow-color: rgba(0, 0, 0, 0.4); /* Soft shadow */
+    
+        /* Borders, Buttons, and Layout */
+        --section-gutter: 10px;
+        --section-border-radius: 7px;
+        --border: thin solid var(--background-accent);
+        --border-primary-color: rgba(242, 238, 248, 0.3);
+        --border-radius: 7px;
+        --button-border-radius: 5px;
+        --button-padding: 7px 30px;
+}
+
+:root.orange {
+        --background: #1d140f; /* Dark brownish-orange background */
+        --background-secondary: #2a1d17; /* Slightly lighter brownish-orange */
+        --background-shade: #361f15; /* Mid-tone brown shade */
+        --background-accent: #4a2a20; /* Accent with an orange tint */
+        --text-color: #f5efe8;
+    
+        /* Mandarin Theme */
+        --primary: #E85C00; /* Main Mandarin Orange */
+        --primary-darker: #cc5200; /* Darker Mandarin Orange */
+        --primary-subtle: rgba(232, 92, 0, 0.2); /* Transparent Mandarin Orange */
+    
+        /* Priority Colors */
+        --no-priority: var(--primary);
+        --low-priority: #60c659; /* Bright Green */
+        --medium-priority: #ffbf4d; /* Warm Yellow for contrast */
+        --high-priority: #ff6a36; /* Deep Orange */
+    
+        /* Accent Colors */
+        --accent-color: #ff7a3a; /* Softer Mandarin Orange */
+        --highlight-color: #ff9559; /* Lighter Mandarin for emphasis */
+        --shadow-color: rgba(0, 0, 0, 0.4); /* Soft shadow */
+    
+        /* Borders, Buttons, and Layout */
+        --section-gutter: 10px;
+        --section-border-radius: 7px;
+        --border: thin solid var(--background-accent);
+        --border-primary-color: rgba(245, 239, 232, 0.3);
+        --border-radius: 7px;
+        --button-border-radius: 5px;
+        --button-padding: 7px 30px;
+}
+
+:root.light {
+        --background: #ffffff;
+        --background-secondary: #f4f4f4;
+        --background-shade: #eaeaea;
+        --background-accent: #dcdcdc;
+        --background-hover: #f0f0f0;
+        --text-color: #1e1e1e;
+        --primary: #1E88E5;
+        --primary-darker: #1565C0;
+        --primary-subtle: hsla(209, 92%, 38%, 0.45);
+    
+        --section-gutter: 10px;
+        --section-border-radius: 7px;
+    
+        --border: thin var(--border-style) var(--background-accent);
+        --border-style: solid;
+        --border-primary-color: rgba(30, 30, 30, 0.255);
+    
+        --border-radius: 7px;
+    
+        --button-border-radius: 5px;
+        --button-padding: 7px 30px;
+    
+        --no-priority: var(var(--primary));
+        --low-priority: rgb(68, 214, 68);
+        --medium-priority: rgb(255, 185, 55);
+        --high-priority: rgb(255, 66, 66);
+        & input[type="checkbox"] {
+                color-scheme: light !important;
+        }
+        & .expanded p {
+                color: var(--text-color) !important;
+        }
+}
+    
+:root.green{
+        --background: #1E1E1E;
+        --background-secondary: #252526;
+        --background-shade: #272729;
+        --background-accent: #333333;
+        --background-hover: #2e2e2f;
+        --text-color: #fbfbfd;
+        --primary: #00FF89; /* New primary color */
+        --primary-darker: #00CC73; /* Darker version of the primary color */
+        --primary-subtle: rgba(0, 255, 137, 0.45); /* Subtle version with transparency */
+    
+        --section-gutter: 10px;
+        --section-border-radius: 7px;
+    
+        --border: thin var(--border-style) var(--background-accent);
+        --border-style: solid;
+        --border-primary-color: rgba(251, 251, 253, 0.255);
+    
+        --border-radius: 7px;
+    
+        --button-border-radius: 5px;
+        --button-padding: 7px 30px;
+    
+        --no-priority: var(--primary);
+        --low-priority: rgb(68, 214, 68); /* Green still works well with the new primary */
+        --medium-priority: rgb(255, 185, 55); /* Yellow matches well with the green */
+        --high-priority: rgb(255, 66, 66); /* Red provides a nice contrast */
+}
+
+:root.purple {
+        --background: #1E1E1E;
+        --background-secondary: #252526;
+        --background-shade: #272729;
+        --background-accent: #333333;
+        --background-hover: #2e2e2f;
+        --text-color: #fbfbfd;
+        --primary: #BE00FF; /* Vivid purple primary color */
+        --primary-darker: #9B00CC; /* Darker version of the purple */
+        --primary-subtle: rgba(190, 0, 255, 0.45); /* Subtle purple with transparency */
+    
+        --section-gutter: 10px;
+        --section-border-radius: 7px;
+    
+        --border: thin var(--border-style) var(--background-accent);
+        --border-style: solid;
+        --border-primary-color: rgba(251, 251, 253, 0.255);
+    
+        --border-radius: 7px;
+    
+        --button-border-radius: 5px;
+        --button-padding: 7px 30px;
+    
+        --no-priority: var(--primary);
+        --low-priority: rgb(68, 214, 68); /* Green contrasts well with purple */
+        --medium-priority: rgb(255, 185, 55); /* Yellow provides a nice contrast */
+        --high-priority: rgb(255, 66, 66); /* Red adds a bold contrast */
+}
+ 
+:root.yellow {
+        --background: #1E1E1E;
+        --background-secondary: #252526;
+        --background-shade: #272729;
+        --background-accent: #333333;
+        --background-hover: #2e2e2f;
+        --text-color: #fbfbfd;
+        --primary: #FFB800; /* Bumblebee yellow */
+        --primary-darker: #CC9500; /* Darker yellow for depth */
+        --primary-subtle: rgba(255, 184, 0, 0.45); /* Subtle yellow with transparency */
+    
+        --section-gutter: 10px;
+        --section-border-radius: 7px;
+    
+        --border: thin var(--border-style) var(--background-accent);
+        --border-style: solid;
+        --border-primary-color: rgba(251, 251, 253, 0.255);
+    
+        --border-radius: 7px;
+    
+        --button-border-radius: 5px;
+        --button-padding: 7px 30px;
+    
+        --no-priority: var(--primary);
+        --low-priority: rgb(68, 214, 68); /* Green provides a fresh contrast to yellow */
+        --medium-priority: rgb(255, 185, 55); /* A lighter yellow contrasts nicely */
+        --high-priority: rgb(255, 66, 66); /* Red adds a bold contrast */
+}
+    
+:root.blue {
+        --background: #1E1E1E;
+        --background-secondary: #252526;
+        --background-shade: #272729;
+        --background-accent: #333333;
+        --background-hover: #2e2e2f;
+        --text-color: #fbfbfd;
+        --primary: #0EA6CD; /* Cyan-blue */
+        --primary-darker: #0A7D99; /* Darker version of cyan-blue */
+        --primary-subtle: rgba(14, 166, 205, 0.45); /* Subtle cyan-blue with transparency */
+    
+        --section-gutter: 10px;
+        --section-border-radius: 7px;
+    
+        --border: thin var(--border-style) var(--background-accent);
+        --border-style: solid;
+        --border-primary-color: rgba(251, 251, 253, 0.255);
+    
+        --border-radius: 7px;
+    
+        --button-border-radius: 5px;
+        --button-padding: 7px 30px;
+    
+        --no-priority: var(--primary);
+        --low-priority: rgb(68, 214, 68); /* Green contrasts well with cyan-blue */
+        --medium-priority: rgb(255, 185, 55); /* Yellow adds a bright contrast */
+        --high-priority: rgb(255, 66, 66); /* Red provides a bold contrast */
+}
 
 body {
         background: var(--background);
@@ -184,11 +405,6 @@ body {
         padding: 5px;
 }
 
-[data-settings] {
-        padding: 20px;
-        background-color: var(--background-secondary);
-        border-radius: var(--section-border-radius);
-}
 
 [data-dialog].active {
         display: flex;
@@ -358,7 +574,6 @@ button {
         gap: 15px;
         border-radius: var(--button-border-radius);
         align-items: center;
-        transition: all 0.2s ease-in-out;
         [data-icon] {
                 scale: 1;
                 transition: all 0.2s ease-in-out;
@@ -396,6 +611,15 @@ button {
                 text-wrap: wrap;
         }
 }
+
+[data="add"] svg path{
+        stroke: var(--text-color);
+} 
+
+[data="add"] {
+        border-color: var(--text-color);
+} 
+
 
 .filters>div:nth-of-type(1) {
         display: flex;
@@ -659,6 +883,50 @@ button {
                 background-color: var(--primary);
         };
 }
+
+[data-settings] {
+        padding: 10px 20px;
+        background-color: var(--background-secondary);
+        border-radius: var(--section-border-radius);
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       [data-icon] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        padding: 0 20px;
+       }
+       & [data-icon] svg{
+        --size: 28px;
+        width: var(--size);
+        height: var(--size);
+       }
+       svg path {
+        fill: var(--primary)
+       }
+
+       [data-icon]:not(:last-of-type) {
+        border-right: var(--border);
+       }
+}
+.theme-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap:10px;
+}
+
+.theme-container > div{
+        border: var(--border);
+        border-radius: var(--border-radius);
+       display: flex;
+       flex: 1;
+       gap: 15px;
+       align-items: center;
+}
+
+
 
 .text-container{
         display: flex;

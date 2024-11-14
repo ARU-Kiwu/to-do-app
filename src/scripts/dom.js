@@ -4,6 +4,7 @@ import { addTodoToProject, createProject, deleteProject, deleteTodoFromProject, 
 import { format, compareAsc, formatDistance, toDate, startOfToday } from "date-fns";
 import gsap, { wrap } from "gsap";
 import { collapseToTopLeft, expandFromTopLeft, hideAnimation,slideLeft, slideRight ,revealIcon, slideDown, slideDownContainers, slideTodosToRight, slideUp } from "./animations";
+import { saveThemeToLocalStorage, getThemeFromLocalStorage } from "./storage";
 
 export function createProjectIcon(icon) {
     const iconEl = generateIcon(icon)
@@ -129,8 +130,23 @@ export function generateIcon(icon) {
        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M17.5 4.75L10 12.25L2.5 4.75L1 6.25L10 15.25L19 6.25L17.5 4.75Z" fill="black"/>
 </svg>
-
+       `,
+       theme:`
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 21C9.78333 21 7.89567 20.2293 6.337 18.688C4.77833 17.1467 3.99933 15.284 4 13.1C4 12 4.20833 10.9833 4.625 10.05C5.04167 9.11665 5.61667 8.28332 6.35 7.54998L10.95 3.02498C11.1 2.89165 11.2667 2.78765 11.45 2.71298C11.6333 2.63832 11.8167 2.60065 12 2.59998C12.1833 2.59932 12.3667 2.63698 12.55 2.71298C12.7333 2.78898 12.9 2.89298 13.05 3.02498L17.65 7.54998C18.3833 8.28332 18.9583 9.11665 19.375 10.05C19.7917 10.9833 20 12 20 13.1C20 15.2833 19.221 17.146 17.663 18.688C16.105 20.23 14.2173 21.0007 12 21ZM12 19V4.79998L7.75 8.99998C7.16667 9.54998 6.72933 10.171 6.438 10.863C6.14667 11.555 6.00067 12.3007 6 13.1C6 14.7167 6.58333 16.1043 7.75 17.263C8.91667 18.4217 10.3333 19.0007 12 19Z" fill="black"/>
+</svg>
+       `,
+       settings:`
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.9998 15.5C11.0716 15.5 10.1813 15.1313 9.52497 14.4749C8.86859 13.8185 8.49984 12.9283 8.49984 12C8.49984 11.0717 8.86859 10.1815 9.52497 9.52513C10.1813 8.86875 11.0716 8.5 11.9998 8.5C12.9281 8.5 13.8183 8.86875 14.4747 9.52513C15.1311 10.1815 15.4998 11.0717 15.4998 12C15.4998 12.9283 15.1311 13.8185 14.4747 14.4749C13.8183 15.1313 12.9281 15.5 11.9998 15.5ZM19.4298 12.97C19.4698 12.65 19.4998 12.33 19.4998 12C19.4998 11.67 19.4698 11.34 19.4298 11L21.5398 9.37C21.7298 9.22 21.7798 8.95 21.6598 8.73L19.6598 5.27C19.5398 5.05 19.2698 4.96 19.0498 5.05L16.5598 6.05C16.0398 5.66 15.4998 5.32 14.8698 5.07L14.4998 2.42C14.4795 2.30222 14.4182 2.19543 14.3267 2.11855C14.2351 2.04168 14.1194 1.99968 13.9998 2H9.99984C9.74984 2 9.53984 2.18 9.49984 2.42L9.12984 5.07C8.49984 5.32 7.95984 5.66 7.43984 6.05L4.94984 5.05C4.72984 4.96 4.45984 5.05 4.33984 5.27L2.33984 8.73C2.20984 8.95 2.26984 9.22 2.45984 9.37L4.56984 11C4.52984 11.34 4.49984 11.67 4.49984 12C4.49984 12.33 4.52984 12.65 4.56984 12.97L2.45984 14.63C2.26984 14.78 2.20984 15.05 2.33984 15.27L4.33984 18.73C4.45984 18.95 4.72984 19.03 4.94984 18.95L7.43984 17.94C7.95984 18.34 8.49984 18.68 9.12984 18.93L9.49984 21.58C9.53984 21.82 9.74984 22 9.99984 22H13.9998C14.2498 22 14.4598 21.82 14.4998 21.58L14.8698 18.93C15.4998 18.67 16.0398 18.34 16.5598 17.94L19.0498 18.95C19.2698 19.03 19.5398 18.95 19.6598 18.73L21.6598 15.27C21.7798 15.05 21.7298 14.78 21.5398 14.63L19.4298 12.97Z" fill="black"/>
+</svg>
+       `,
+       timer:`
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 3V1H15V3H9ZM11 14H13V8H11V14ZM12 22C10.7667 22 9.604 21.7627 8.512 21.288C7.42 20.8133 6.466 20.1673 5.65 19.35C4.834 18.5327 4.18833 17.5783 3.713 16.487C3.23767 15.3957 3 14.2333 3 13C3 11.7667 3.23767 10.604 3.713 9.512C4.18833 8.42 4.834 7.466 5.65 6.65C6.466 5.834 7.42033 5.18833 8.513 4.713C9.60567 4.23767 10.768 4 12 4C13.0333 4 14.025 4.16667 14.975 4.5C15.925 4.83333 16.8167 5.31667 17.65 5.95L19.05 4.55L20.45 5.95L19.05 7.35C19.6833 8.18333 20.1667 9.075 20.5 10.025C20.8333 10.975 21 11.9667 21 13C21 14.2333 20.7623 15.396 20.287 16.488C19.8117 17.58 19.166 18.534 18.35 19.35C17.534 20.166 16.5797 20.812 15.487 21.288C14.3943 21.764 13.232 22.0013 12 22Z" fill="black"/>
+</svg>
        `
+
     }
 
     const iconEl = document.createElement('div')
@@ -1046,6 +1062,87 @@ export function editToDoDialog(project, todo) {
 
     const wrapper = document.createElement('div');
     wrapper.append(modalHeader, inputContainer, buttonsContainer);
+    dialog.append(wrapper);
+    slideDown(wrapper, gsap);
+    appendingContainer.append(dialog);
+}
+
+export function generateSettingsSection(appendingContainer) {
+   
+  
+    const themeIcon = generateIcon('theme')
+
+    themeIcon.addEventListener('click', ()=> {
+        themeSelectionDialog()
+    })
+
+    const settingsIcon = generateIcon('settings')
+    const timerIcon = generateIcon('timer')
+
+
+    appendingContainer.append(themeIcon, settingsIcon, timerIcon)
+  }
+  
+
+  export const theme = 'default'
+
+  export function themeSelectionDialog(currentTheme, onThemeSelected) {
+    const appendingContainer = document.querySelector('[data-dialog]');
+    appendingContainer.classList.add('active');
+    const dialog = document.createElement('dialog');
+    dialog.classList.add('theme-dialog');
+
+    const modalHeader = document.createElement('div');
+    modalHeader.classList.add('modal-header');
+    const modalTitle = document.createElement('span');
+    modalTitle.textContent = 'Select a theme';
+
+    const closeButton = generateIcon('close');
+    closeButton.addEventListener('click', () => {
+        slideUp(wrapper, gsap, () => {
+            dialog.remove();
+            appendingContainer.classList.remove('active');
+        });
+    });
+
+    modalHeader.append(modalTitle, closeButton);
+
+    const themeContainer = document.createElement('div');
+    themeContainer.classList.add('theme-container');
+
+    const themes = {
+        default: 'Default',
+        light: 'Light',
+        red: 'Solar Red',
+        orange: 'Mandarin',
+        yellow: 'Bumble Bee',
+        green: 'Green Tea',
+        blue: 'Lazuli Blue',
+        purple: 'Liliac'
+    }
+
+    for(let theme in themes) {
+        const themeButton = document.createElement('div')
+
+        const themeIcon = generateIcon('theme')
+        const themeName= document.createElement('span')
+
+        themeName.textContent = `${themes[theme]}`
+        const root = document.querySelector('html')
+        themeButton.append(themeIcon, themeName)
+        themeButton.classList.add(`${theme}`)
+        themeButton.addEventListener('click', ()=> {
+         theme = `${theme}`
+          root.classList.value = (`${theme}`)
+            saveThemeToLocalStorage(theme)
+        })
+        themeContainer.append(themeButton)
+    }
+
+ 
+
+    const wrapper = document.createElement('div');
+    wrapper.append(modalHeader, themeContainer);
     dialog.append(wrapper);
     slideDown(wrapper, gsap);
     appendingContainer.append(dialog);

@@ -1,8 +1,11 @@
-import { createProjectDialog, generateIcon, generateProjectPage, renderProjectsIcons } from "./dom"
+import { generateSettingsSection, createProjectDialog, generateIcon, generateProjectPage, renderProjectsIcons } from "./dom"
+import { getThemeFromLocalStorage, applyThemeFromLocalStorage } from "./storage"
 import { projects } from "./todo"
 
 
 export function app() {
+    const theme = getThemeFromLocalStorage()
+    applyThemeFromLocalStorage()
     const app = document.querySelector('#app')
     
     // Create the project container where you can see all of your current projects
@@ -28,8 +31,9 @@ export function app() {
 
         const settingsContainer = document.createElement('div')
         settingsContainer.setAttribute('data-settings', '')
-
-    projectsContainer.append(addProjectContainer, projectsDisplayContainer, settingsContainer)
+        generateSettingsSection(settingsContainer)
+        
+        projectsContainer.append(addProjectContainer, projectsDisplayContainer, settingsContainer)
 
     // Create the page container to display project contents
     const projectPageContainer  = document.createElement('div')
@@ -43,4 +47,6 @@ export function app() {
 
     renderProjectsIcons(projects)
 }
+
+
 
