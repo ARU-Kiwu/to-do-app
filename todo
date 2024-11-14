@@ -1,21 +1,18 @@
-=============================
-=========    UI     =========
-=============================
 
-[x] - Add more icons
-[x] - Add animations
-[] - Redesign Modal
-[] - Add color themes
-[] - Add task UI
-[x] - Add task description dropdown || modal
+# UI
 
-=============================
-====    FUNCTIONALITY    ====
-=============================
 
-[x] - Add delete project Modal
-[x] - Add edit project modal
-[x] - Add saves to localstorage
-[] - Add settings
-[] - Add timer for each task
+- [x] Add more icons
+- [x] Add animations
+- [x] Add color themes
+- [x] Add task UI
+- [x] Add task description (dropdown or modal)
 
+
+# FUNCTIONALITY
+
+- [x] Add delete project modal
+- [x] Add edit project modal
+- [x] Save projects to local storage
+- [ ] Add settings
+- [ ] Add timer for each task
