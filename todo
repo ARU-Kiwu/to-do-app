@@ -1,13 +1,11 @@
 
 # UI
 
-
 - [x] Add more icons
 - [x] Add animations
 - [x] Add color themes
 - [x] Add task UI
 - [x] Add task description (dropdown or modal)
-
 
 # FUNCTIONALITY
 
@@ -16,3 +14,13 @@
 - [x] Save projects to local storage
 - [ ] Add settings
 - [ ] Add timer for each task
+
+# MISC
+
+- [] Add a favicon
+- [] Tweak Themes
+- [] Add a max limit to project title
+- [] Add hover effect to settings icons
+- [] Add theme colors with appropiate looks
+- [] Add hover effect on project icon selection
+- [] Modify Checkbox Color
