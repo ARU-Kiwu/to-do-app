@@ -1,4 +1,7 @@
 import gsap from "gsap";
+import { TextPlugin } from "gsap/TextPlugin";
+
+gsap.registerPlugin(TextPlugin);
 
 // Slide up animation
 export function slideUp(selector, gsap, onCompleteCallback) {
@@ -172,6 +175,18 @@ export function slideTodosToRight(gsap) {
 );
 }
 
+export function typewriterAnimation(selector, text, duration) {
+   
+    
+    gsap.to(selector, {
+        text: text,           // GSAP text plugin will type out the content of 'text'
+        duration: text.length * duration, // Adjust duration based on text length
+        ease: "power1.inOut",
+        onStart: () => {
+           selector.style.display = 'inline-block'; // Ensure element is visible
+        }
+    });
+}
 
 
 

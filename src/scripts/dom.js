@@ -3,7 +3,7 @@ import { saveData } from "./storage";
 import { addTodoToProject, createProject, deleteProject, deleteTodoFromProject, projects, setTodoCompleted, setTodoUncompleted } from "./todo"
 import { format, compareAsc, formatDistance, toDate, startOfToday } from "date-fns";
 import gsap, { wrap } from "gsap";
-import { collapseToTopLeft, expandFromTopLeft, hideAnimation,slideLeft, slideRight ,revealIcon, slideDown, slideDownContainers, slideTodosToRight, slideUp } from "./animations";
+import { collapseToTopLeft, expandFromTopLeft, hideAnimation,slideLeft, slideRight ,revealIcon, slideDown, slideDownContainers, slideTodosToRight, slideUp, typewriterAnimation } from "./animations";
 import { saveThemeToLocalStorage, getThemeFromLocalStorage } from "./storage";
 
 export function createProjectIcon(icon) {
@@ -150,7 +150,44 @@ export function generateIcon(icon) {
        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M3 12C3 12.2652 3.10536 12.5196 3.29289 12.7071C3.48043 12.8946 3.73478 13 4 13H10C10.2652 13 10.5196 12.8946 10.7071 12.7071C10.8946 12.5196 11 12.2652 11 12V4C11 3.73478 10.8946 3.48043 10.7071 3.29289C10.5196 3.10536 10.2652 3 10 3H4C3.73478 3 3.48043 3.10536 3.29289 3.29289C3.10536 3.48043 3 3.73478 3 4V12ZM3 20C3 20.2652 3.10536 20.5196 3.29289 20.7071C3.48043 20.8946 3.73478 21 4 21H10C10.2652 21 10.5196 20.8946 10.7071 20.7071C10.8946 20.5196 11 20.2652 11 20V16C11 15.7348 10.8946 15.4804 10.7071 15.2929C10.5196 15.1054 10.2652 15 10 15H4C3.73478 15 3.48043 15.1054 3.29289 15.2929C3.10536 15.4804 3 15.7348 3 16V20ZM13 20C13 20.2652 13.1054 20.5196 13.2929 20.7071C13.4804 20.8946 13.7348 21 14 21H20C20.2652 21 20.5196 20.8946 20.7071 20.7071C20.8946 20.5196 21 20.2652 21 20V12C21 11.7348 20.8946 11.4804 20.7071 11.2929C20.5196 11.1054 20.2652 11 20 11H14C13.7348 11 13.4804 11.1054 13.2929 11.2929C13.1054 11.4804 13 11.7348 13 12V20ZM14 3C13.7348 3 13.4804 3.10536 13.2929 3.29289C13.1054 3.48043 13 3.73478 13 4V8C13 8.26522 13.1054 8.51957 13.2929 8.70711C13.4804 8.89464 13.7348 9 14 9H20C20.2652 9 20.5196 8.89464 20.7071 8.70711C20.8946 8.51957 21 8.26522 21 8V4C21 3.73478 20.8946 3.48043 20.7071 3.29289C20.5196 3.10536 20.2652 3 20 3H14Z" fill="black"/>
 </svg>
-`
+`,
+        projects: `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.60999L21 6.80613V17.1985L12 22.3946L3 17.1985V6.80613L12 1.60999ZM4.99997 9.00002V16.0437L11 19.5078V12.4641L4.99997 9.00002ZM19 9.00006L13 12.4641V19.5078L19 16.0437V9.00006ZM12 3.91938L6.09998 7.32578L12 10.7321L17.9 7.32569L12 3.91938Z" fill="black"/>
+</svg>
+
+        `,
+        completedTodos: `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 1H8V5H16V1Z" fill="black"/>
+<path d="M6 3H3V23H13.876C13.0193 21.9035 12.537 20.5611 12.5002 19.17C12.4633 17.779 12.8739 16.4129 13.6714 15.2726C14.4689 14.1324 15.6113 13.2781 16.9305 12.8355C18.2497 12.3929 19.6762 12.3854 21 12.814V3H18V7H6V3Z" fill="black"/>
+<path d="M19.2424 21L17.7422 22.414L16.2424 21L16.3282 21L14.328 19L15.742 17.585L17.7422 19.586L22.3282 15L23.7422 16.415L19.1572 21L19.2424 21Z" fill="black"/>
+</svg>
+
+        `,
+        uncompletedTodos: `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 1H8V5H16V1Z" fill="black"/>
+<path d="M6 3H3V23H13.876C13.0193 21.9035 12.537 20.5611 12.5002 19.17C12.4633 17.779 12.8739 16.4129 13.6714 15.2726C14.4689 14.1324 15.6113 13.2781 16.9305 12.8355C18.2497 12.3929 19.6762 12.3854 21 12.814V3H18V7H6V3Z" fill="black"/>
+<path d="M23.2428 21.828L21.8288 23.243L18.9998 20.414L16.1718 23.243L14.7578 21.828L17.5858 19L14.7578 16.172L16.1718 14.757L18.9998 17.586L21.8288 14.757L23.2428 16.172L20.4148 19L23.2428 21.828Z" fill="black"/>
+</svg>
+
+        `,
+        highPriorityTodos: `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 1H8V5H16V1Z" fill="black"/>
+<path d="M6 3H3V23H13.876C13.0193 21.9035 12.537 20.5611 12.5002 19.17C12.4633 17.779 12.8739 16.4129 13.6714 15.2726C14.4689 14.1324 15.6113 13.2781 16.9305 12.8355C18.2497 12.3929 19.6762 12.3854 21 12.814V3H18V7H6V3Z" fill="black"/>
+<g clip-path="url(#clip0_943_26)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M14.675 20.5L17.8438 14.1719C18.2319 13.3966 19.3344 13.3966 19.7188 14.1719L22.8875 20.5C22.9681 20.6604 23.0064 20.8388 22.9988 21.0181C22.9912 21.1975 22.9379 21.372 22.8441 21.525C22.7502 21.678 22.6188 21.8045 22.4623 21.8926C22.3059 21.9806 22.1295 22.0273 21.95 22.0281H15.6125C14.8306 22.0281 14.3188 21.2013 14.675 20.5ZM19.4844 16.6375C19.4844 16.1406 19.1216 15.9344 18.7813 15.9344C18.441 15.9344 18.0781 16.1425 18.0781 16.6375C18.0781 17.1325 18.2544 18.025 18.3125 18.2781C18.3706 18.5313 18.5225 18.7469 18.7813 18.7469C19.04 18.7469 19.1844 18.5341 19.25 18.2781C19.3156 18.0222 19.4844 17.125 19.4844 16.6375ZM19.4844 20.1531C19.4844 20.3396 19.4103 20.5185 19.2785 20.6503C19.1466 20.7822 18.9678 20.8563 18.7813 20.8563C18.5948 20.8563 18.416 20.7822 18.2841 20.6503C18.1522 20.5185 18.0781 20.3396 18.0781 20.1531C18.0781 19.9666 18.1522 19.7878 18.2841 19.6559C18.416 19.5241 18.5948 19.45 18.7813 19.45C18.9678 19.45 19.1466 19.5241 19.2785 19.6559C19.4103 19.7878 19.4844 19.9666 19.4844 20.1531Z" fill="black"/>
+</g>
+<defs>
+<clipPath id="clip0_943_26">
+<rect width="15" height="15" fill="white" transform="translate(8 7)"/>
+</clipPath>
+</defs>
+</svg>
+        `
+
 
     }
 
@@ -529,8 +566,14 @@ export function createProjectDialog() {
         const project = createProject(title, icon)
         saveData()
         renderProjectsIcons(projects)
-        dialog.remove()
         appendingContainer.classList.remove('active')
+        const dashboardElement = document.querySelector('.dashboard')
+        if(dashboardElement !== null) { 
+            const metricContainer = document.querySelector('.dashboard-info')
+            rerenderMetrics(projects, metricContainer)
+        }
+
+        dialog.remove()
     })
 
     const cancelButton = document.createElement('button')
@@ -1082,6 +1125,9 @@ export function generateSettingsSection(appendingContainer) {
     })
 
     const dashboardIcon = generateIcon('dashboard')
+    dashboardIcon.addEventListener('click', ()=> {
+        generateDashboardPage(projects)
+    })
     const timerIcon = generateIcon('timer')
 
 
@@ -1091,7 +1137,7 @@ export function generateSettingsSection(appendingContainer) {
 
   export const theme = 'default'
 
-  export function themeSelectionDialog(currentTheme, onThemeSelected) {
+  export function themeSelectionDialog() {
     const appendingContainer = document.querySelector('[data-dialog]');
     appendingContainer.classList.add('active');
     const dialog = document.createElement('dialog');
@@ -1154,6 +1200,186 @@ export function generateSettingsSection(appendingContainer) {
 }
 
 
-export function generateDashboardPage() {}
+
+export function generateDashboardPage(projects) {
+    const appendingContainer = document.querySelector('[data-project-page]');
+    appendingContainer.innerHTML = '';
+
+    if (Object.keys(projects).length === 0) {
+        const defaultPage = generateDefaultDashboardPage();
+        appendingContainer.append(defaultPage);
+
+        gsap.from(defaultPage, {
+            opacity: 0,
+            y: 20,
+            duration: 1,
+            ease: "power3.out",
+        });
+
+        return;
+    }
+
+    const dashboardElement = document.createElement('div');
+    dashboardElement.classList.add('dashboard');
+
+    const header = createHeader('Dashboard');
+    const infoContainer = document.createElement('div');
+    infoContainer.classList.add('dashboard-info');
+
+    // Initial render of metrics
+    rerenderMetrics(projects, infoContainer);
+
+    dashboardElement.append(header, infoContainer);
+    appendingContainer.append(dashboardElement);
+
+    // Animations
+    gsap.from(header, {
+        opacity: 0,
+        y: -20,
+        duration: 1,
+        ease: "power2.out",
+    });
+
+    gsap.fromTo(
+        infoContainer.children,
+        { opacity: 0, y: 20 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.2,
+            ease: "power3.out",
+        }
+    );
+}
+
+export function rerenderMetrics(projects, infoContainer) {
+    infoContainer.innerHTML = ''; // Clear existing metrics
+
+    const metrics = [
+        {
+            className: 'projects-metric',
+            iconType: 'projects',
+            label: 'Total Projects',
+            value: () => Object.keys(projects).length,
+        },
+        {
+            className: 'high-priority-metric',
+            iconType: 'highPriorityTodos',
+            label: 'High Priority Tasks',
+            value: () => calculateTodos(projects, (todo) => todo.priority === 'High'),
+        },
+        {
+            className: 'active-todos-metric',
+            iconType: 'uncompletedTodos',
+            label: 'Active Tasks',
+            value: () => calculateTodos(projects, (todo) => !todo.completed),
+        },
+        {
+            className: 'completed-todos-metric',
+            iconType: 'completedTodos',
+            label: 'Completed Tasks',
+            value: () => calculateCompletedTodos(projects, (todo) => todo.completed),
+        },
+    ];
+
+    metrics.forEach(({ className, iconType, label, value }) => {
+        const metricContainer = createMetricContainer(className, iconType, label, value());
+        infoContainer.append(metricContainer);
+    });
+
+    // Reapply animations for updated metrics
+    gsap.fromTo(
+        infoContainer.children,
+        { opacity: 0, y: 20 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.2,
+            ease: "power3.out",
+        }
+    );
+}
+
+function createHeader(title) {
+    const header = document.createElement('div');
+    const headerText = document.createElement('h2');
+    headerText.textContent = title;
+    header.append(headerText);
+    return header;
+}
+
+function createMetricContainer(className, iconType, label, value) {
+    const container = document.createElement('div');
+    container.classList.add(className);
+
+    const icon = generateIcon(iconType);
+
+    const valueText = document.createElement('span');
+    valueText.textContent = value;
+    valueText.classList.add('metric-value');
+
+    const labelText = document.createElement('p');
+    labelText.textContent = label;
+    labelText.classList.add('metric-label');
+
+    container.append(icon, valueText, labelText);
+
+    gsap.fromTo(
+        icon,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" }
+    );
+
+    return container;
+}
+
+function calculateTodos(projects, condition) {
+    let count = 0;
+    for (let projectKey in projects) {
+        const project = projects[projectKey];
+        project.todos.forEach((todo) => {
+            if (condition(todo)) {
+                count++;
+            }
+        });
+    }
+    return count;
+}
+
+function calculateCompletedTodos(projects, condition) {
+    let count = 0;
+    for (let projectKey in projects) {
+        const project = projects[projectKey];
+        project.done.forEach((todo) => {
+            if (condition(todo)) {
+                count++;
+            }
+        });
+    }
+    return count;
+}
 
 
+function generateDefaultDashboardPage() {
+    const container = document.createElement('div');
+    container.classList.add('default-page');
+
+    const heading = document.createElement('h5');
+    typewriterAnimation(heading, `Welcome to Memorizo`, 0.1);
+
+    const text = document.createElement('p');
+    text.textContent = `There is currently no active project. You can create a new project by pressing the button on the top left`;
+
+    gsap.delayedCall(3, () => {
+        gsap.fromTo(
+            text,
+            { opacity: 0, y: -10 },
+            { opacity: 1, ease: "power1.inOut", duration: 1, y: 0 }
+        );
+    });
+
+    container.append(heading, text);
+    return container;
+}

@@ -1,13 +1,11 @@
-import { generateSettingsSection, createProjectDialog, generateIcon, generateProjectPage, renderProjectsIcons } from "./dom"
+import { generateSettingsSection, createProjectDialog, generateIcon, generateProjectPage, renderProjectsIcons, generateDashboardPage } from "./dom"
 import { getThemeFromLocalStorage, applyThemeFromLocalStorage } from "./storage"
 import { projects } from "./todo"
-
 
 export function app() {
     const theme = getThemeFromLocalStorage()
     applyThemeFromLocalStorage()
     const app = document.querySelector('#app')
-    
     // Create the project container where you can see all of your current projects
     const projectsContainer = document.createElement('div')
     projectsContainer.setAttribute('data-projects', '')
@@ -46,6 +44,7 @@ export function app() {
     app.append(projectsContainer, projectPageContainer, dialogBoxContainer)
 
     renderProjectsIcons(projects)
+    generateDashboardPage(projects) 
 }
 
 
