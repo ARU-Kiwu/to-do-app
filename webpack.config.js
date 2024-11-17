@@ -55,7 +55,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      // favicon: 'src/favicon.ico',
+      favicon: 'src/favicon.png',
       title: 'Memoriso',
       template: 'src/index.html'
     }),

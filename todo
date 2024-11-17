@@ -18,10 +18,10 @@
 
 # MISC
 
-- [] Add a favicon
+- [x] Add a favicon
 - [] Tweak Themes
 - [x] Add a max limit to project title
-- [] Add hover effect to settings icons
+- [x] Add hover effect to settings icons
 - [x] Add theme colors with appropiate looks
 - [x] Add hover effect on project icon selection
 - [x] Modify Checkbox Color
