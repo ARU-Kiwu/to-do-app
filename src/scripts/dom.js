@@ -1185,7 +1185,7 @@ export function generateSettingsSection(appendingContainer) {
         red: 'Solar Red',
         orange: 'Mandarin',
         yellow: 'Bumble Bee',
-        green: 'Green Tea',
+        green: 'Mint',
         blue: 'Light Blue',
         purple: 'Liliac'
     }

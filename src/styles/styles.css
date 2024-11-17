@@ -102,7 +102,7 @@ html {
         --no-priority: var(--primary);
         --low-priority: #44d644;
         --medium-priority: #ffb937;
-        --high-priority: #ff5656;
+        --high-priority: #00bbff;
     
         /* Accent Colors */
         --accent-color: #ff4747; /* Slightly softened red */
@@ -135,7 +135,8 @@ html {
         --no-priority: var(--primary);
         --low-priority: #60c659; /* Bright Green */
         --medium-priority: #ffbf4d; /* Warm Yellow for contrast */
-        --high-priority: #ff6a36; /* Deep Orange */
+        --high-priority: #00bbff;
+
     
         /* Accent Colors */
         --accent-color: #ff7a3a; /* Softer Mandarin Orange */
@@ -194,8 +195,8 @@ html {
         --background-accent: #333333;
         --background-hover: #2e2e2f;
         --text-color: #fbfbfd;
-        --primary: #00FF89; /* New primary color */
-        --primary-darker: #00CC73; /* Darker version of the primary color */
+        --primary: #00c569; /* New primary color */
+        --primary-darker: #00c06d; /* Darker version of the primary color */
         --primary-subtle: rgba(0, 255, 137, 0.45); /* Subtle version with transparency */
     
         --section-gutter: 10px;
@@ -211,7 +212,7 @@ html {
         --button-padding: 7px 30px;
     
         --no-priority: var(--primary);
-        --low-priority: rgb(68, 214, 68); /* Green still works well with the new primary */
+        --low-priority: rgb(68, 214, 202); /* Green still works well with the new primary */
         --medium-priority: rgb(255, 185, 55); /* Yellow matches well with the green */
         --high-priority: rgb(255, 66, 66); /* Red provides a nice contrast */
 }
@@ -272,6 +273,9 @@ html {
         --low-priority: rgb(68, 214, 68); /* Green provides a fresh contrast to yellow */
         --medium-priority: rgb(255, 185, 55); /* A lighter yellow contrasts nicely */
         --high-priority: rgb(255, 66, 66); /* Red adds a bold contrast */
+
+        [data-addproject] span {color: var(--background)}
+        [data-addproject] span + div svg path {stroke: var(--background)}
 }
     
 :root.blue {
@@ -743,7 +747,6 @@ button {
         display: flex;
         width: 100%;
         justify-content: space-between;
-        transition: all 200ms ease-out;
         border-radius: var(--section-border-radius);
 }
 
@@ -1269,7 +1272,7 @@ button {
             }
             
             .green {
-                --primary: #00FF89;
+                --primary: #00c569;;
                 --background: #1E1E1E;
                 --background-secondary: #252526;
                 border-color: var(--border-primary-color);
