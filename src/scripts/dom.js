@@ -339,8 +339,13 @@ export function renderTodos(project) {
         todoDiv.setAttribute('data', `${todo.id}`)
         const todoHeader = document.createElement('div');
 
+        const checkboxWrapper = document.createElement('div')
+        checkboxWrapper.classList.add('checkbox-wrapper-13')
         //Create to do checkbox for setting the todo complete
         const checkbox = document.createElement('input')
+        checkbox.id = todo.id
+        const label = document.createElement('label')
+        label.setAttribute('for', `${todo.id}`)
         todo.completed === true ? checkbox.checked = true : checkbox.checked = false;
         checkbox.setAttribute('type', 'checkbox')
         checkbox.addEventListener('change', () => {
@@ -363,7 +368,8 @@ export function renderTodos(project) {
         editIcon.addEventListener('click', ()=> {
             editToDoDialog(project, todo)
         })
-        todoHeader.append(checkbox, titleElement, editIcon)
+        checkboxWrapper.append(checkbox, label)
+        todoHeader.append(checkboxWrapper, titleElement, editIcon)
         const additionalInfoContainer = document.createElement('div');
 
         const priorityInfoContainer = document.createElement('div');
@@ -414,10 +420,17 @@ export function renderCompletedTodos(project) {
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('completed-todo');
 
+
+        const checkboxWrapper = document.createElement('div')
+        checkboxWrapper.classList.add('checkbox-wrapper-13')
+
         // Create a checkbox and mark it as checked
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = todo.completed;
+        checkbox.id = todo.id
+        const label = document.createElement('label')
+        checkboxWrapper.append(checkbox, label)
         checkbox.addEventListener('click', ()=> {
            slideLeft(todoDiv, gsap, ()=> {
                 setTodoUncompleted(project.id, todo.id)
@@ -432,7 +445,7 @@ export function renderCompletedTodos(project) {
             })
            saveData()
         })
-        todoDiv.appendChild(checkbox);
+        todoDiv.appendChild(checkboxWrapper);
 
         // Create a title element with strikethrough style
         const title = document.createElement('span');
@@ -550,6 +563,8 @@ export function createProjectDialog() {
     titleInput.setAttribute('type', 'text')
     titleInput.setAttribute('maxlength', '32')
     titleInput.placeholder = 'Project Title'
+
+    const label = document.createElement('label')
     projectTitleInputContainer.append(titleInput)
 
 
