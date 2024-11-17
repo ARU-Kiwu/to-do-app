@@ -12,8 +12,8 @@
 - [x] Add delete project modal
 - [x] Add edit project modal
 - [x] Save projects to local storage
-- [ ] Add settings
-- [ ] Add timer for each task
+- [x] Add settings
+- [] Add timer for each task
 
 # MISC
 
