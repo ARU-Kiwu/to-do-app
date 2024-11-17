@@ -548,6 +548,7 @@ export function createProjectDialog() {
     const projectTitleInputContainer = document.createElement('div')
     const titleInput = document.createElement('input')
     titleInput.setAttribute('type', 'text')
+    titleInput.setAttribute('maxlength', '32')
     titleInput.placeholder = 'Project Title'
     projectTitleInputContainer.append(titleInput)
 
@@ -918,6 +919,7 @@ export function editProjectDialog(project) {
     const projectTitleInputContainer = document.createElement('div');
     const titleInput = document.createElement('input');
     titleInput.setAttribute('type', 'text');
+    titleInput.setAttribute('maxlength', '32')
     titleInput.placeholder = 'Project Title';
     titleInput.value = project.name || ''; // Set the current project title
     projectTitleInputContainer.append(titleInput);

@@ -19,7 +19,7 @@
 
 - [] Add a favicon
 - [] Tweak Themes
-- [] Add a max limit to project title
+- [x] Add a max limit to project title
 - [] Add hover effect to settings icons
 - [x] Add theme colors with appropiate looks
 - [] Add hover effect on project icon selection
