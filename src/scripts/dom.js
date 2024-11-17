@@ -398,6 +398,7 @@ export function renderTodos(project) {
         descEl.textContent = `${todo.description}`;
         descriptionExpandIcon.addEventListener('click', () => {
             descriptionElement.classList.toggle('expanded')
+            descriptionExpandIcon.classList.toggle('expanded')
         })
         todoDiv.append(todoHeader);
         todoDiv.append(additionalInfoContainer);

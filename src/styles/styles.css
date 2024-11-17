@@ -91,6 +91,7 @@ html {
         --background-shade: #472a34; /* Mid-tone reddish shade */
         --background-accent: #56323f; /* Accent with a red tint */
         --text-color: #f2eef8;
+        --background-hover: #4d2f38;
     
         /* Intensified Solar Red Theme */
         --primary: #ff2e2e; /* Bright Solar Red */
@@ -742,6 +743,8 @@ button {
         display: flex;
         width: 100%;
         justify-content: space-between;
+        transition: all 200ms ease-out;
+        border-radius: var(--section-border-radius);
 }
 
 .to-dos .todo:last-of-type {
@@ -1209,6 +1212,10 @@ button {
         text-align: center;
     }
     
+    .todo:hover {
+        background: var(--background-shade);
+    }
+
     .metric-value {
         font-size: 24px;
         font-weight: bold;
@@ -1303,6 +1310,33 @@ button {
             
     }
 
+    /*Icon hover effect */
+
+    [data-settings], .project-page-header, .todo > div:nth-of-type(1){
+        [data-icon] svg {
+                transition: all 0.2s ease-in-out;
+        }
+        [data-icon]:hover svg{
+                scale: 1.2;
+        }
+    }
+
+    /*Epand icon rotate*/
+    [data="expand"] svg{
+        transition: all 0.2s ease-in-out;
+    }
+    [data="expand"].expanded svg{
+        transform: rotate(180deg);
+    }
+  
+   
+    /* 
+    
+    Checkbox From
+
+    *https://getcssscan.com/css-checkboxes-examples 
+    
+    */
   @supports (-webkit-appearance: none) or (-moz-appearance: none) {
     .checkbox-wrapper-13 input[type=checkbox] {
       --active: var(--primary);
@@ -1314,6 +1348,7 @@ button {
       --disabled: #F6F8FF;
       --disabled-inner: #E1E6F9;
       -webkit-appearance: none;
+      appearance: none;
       -moz-appearance: none;
       outline: none;
       height: 21px;

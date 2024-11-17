@@ -6,6 +6,7 @@
 - [x] Add color themes
 - [x] Add task UI
 - [x] Add task description (dropdown or modal)
+- [] Add more to Dashboard UI
 
 # FUNCTIONALITY
 
@@ -13,7 +14,7 @@
 - [x] Add edit project modal
 - [x] Save projects to local storage
 - [x] Add settings
-- [] Add timer for each task
+- [] Add a pomodoro timer
 
 # MISC
 
@@ -22,5 +23,11 @@
 - [x] Add a max limit to project title
 - [] Add hover effect to settings icons
 - [x] Add theme colors with appropiate looks
-- [] Add hover effect on project icon selection
-- [] Modify Checkbox Color
+- [x] Add hover effect on project icon selection
+- [x] Modify Checkbox Color
+- [] Add pomodoro timer SFX
+
+# VERY-IMPORTANT
+
+- [] Make the project responsive
+- [] Modify the z-index of each modal on removal and reveal
