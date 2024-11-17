@@ -1233,5 +1233,87 @@ button {
         color: #666;
     }
 
+    .theme-container {
+        .default {
+                --primary: #0577E4;
+                --background: #1E1E1E;
+                --background-secondary: #252526;
+                border-color: var(--border-primary-color);
+                [data-icon] {
+                    background: var(--background-secondary);
+                }
+            }
+            
+            .red {
+                --primary: #ff2e2e;
+                --background: #2a1b20;
+                --background-secondary: #3a232a;
+                border-color: var(--border-primary-color);
+                [data-icon] {
+                    background: var(--background-secondary);
+                }
+            }
+            
+            .orange {
+                --primary: #E85C00;
+                --background: #1d140f;
+                --background-secondary: #2a1d17;
+                border-color: var(--border-primary-color);
+                [data-icon] {
+                    background: var(--background-secondary);
+                }
+            }
+            
+            .light {
+                --primary: #1E88E5;
+                --background: #ffffff;
+                --background-secondary: #f4f4f4;
+                border-color: var(--border-primary-color);
+                [data-icon] {
+                    background: var(--background-secondary);
+                }
+            }
+            
+            .green {
+                --primary: #00FF89;
+                --background: #1E1E1E;
+                --background-secondary: #252526;
+                border-color: var(--border-primary-color);
+                [data-icon] {
+                    background: var(--background-secondary);
+                }
+            }
+            
+            .purple {
+                --primary: #BE00FF;
+                --background: #1E1E1E;
+                --background-secondary: #252526;
+                border-color: var(--border-primary-color);
+                [data-icon] {
+                    background: var(--background-secondary);
+                }
+            }
+            
+            .yellow {
+                --primary: #FFB800;
+                --background: #1E1E1E;
+                --background-secondary: #252526;
+                border-color: var(--border-primary-color);
+                [data-icon] {
+                    background: var(--background-secondary);
+                }
+            }
+            
+            .blue {
+                --primary: #0EA6CD;
+                --background: #1E1E1E;
+                --background-secondary: #252526;
+                border-color: var(--border-primary-color);
+                [data-icon] {
+                    background: var(--background-secondary);
+                }
+            }
+            
+    }
 
     
