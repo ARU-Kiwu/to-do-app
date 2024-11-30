@@ -1,7 +1,7 @@
 
 import { saveData } from "./storage";
 import { addTodoToProject, createProject, deleteProject, deleteTodoFromProject, projects, setTodoCompleted, setTodoUncompleted } from "./todo"
-import { format, compareAsc, formatDistance, toDate, startOfToday } from "date-fns";
+import { format, compareAsc, formatDistance, toDate, startOfToday, add } from "date-fns";
 import gsap, { wrap } from "gsap";
 import { collapseToTopLeft, expandFromTopLeft, hideAnimation,slideLeft, slideRight ,revealIcon, slideDown, slideDownContainers, slideTodosToRight, slideUp, typewriterAnimation } from "./animations";
 import { saveThemeToLocalStorage, getThemeFromLocalStorage } from "./storage";
@@ -185,6 +185,23 @@ export function generateIcon(icon) {
 <rect width="15" height="15" fill="white" transform="translate(8 7)"/>
 </clipPath>
 </defs>
+</svg>
+        `,
+        play: `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.6386 10.4936C16.9321 10.6497 17.1777 10.8827 17.3489 11.1676C17.5201 11.4526 17.6105 11.7788 17.6105 12.1112C17.6105 12.4436 17.5201 12.7698 17.3489 13.0547C17.1777 13.3397 16.9321 13.5727 16.6386 13.7288L8.80923 17.9863C7.54853 18.6726 6 17.7804 6 16.3693V7.85365C6 6.44201 7.54853 5.55042 8.80923 6.23546L16.6386 10.4936Z" fill="black"/>
+</svg>
+
+        `,
+        hold: `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8 6H16C17.1 6 18 6.9 18 8V16C18 17.1 17.1 18 16 18H8C6.9 18 6 17.1 6 16V8C6 6.9 6.9 6 8 6Z" fill="black"/>
+</svg>
+
+        `,
+        restart: `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.4036 6.72C14.0836 6.72 15.6836 7.36 16.8836 8.56C19.3636 11.04 19.3636 15.12 16.8836 17.6C15.4436 19.12 13.4436 19.68 11.5236 19.44L11.9236 17.84C13.2836 18 14.7236 17.52 15.7636 16.48C17.6036 14.64 17.6036 11.6 15.7636 9.68C14.8836 8.8 13.6036 8.32 12.4036 8.32V12L8.40364 8L12.4036 4V6.72ZM7.84364 17.6C5.76364 15.52 5.44364 12.32 6.88364 9.84L8.08364 11.04C7.20364 12.8 7.52364 15.04 9.04364 16.48C9.44364 16.88 9.92364 17.2 10.4836 17.44L10.0036 19.04C9.20364 18.72 8.48364 18.24 7.84364 17.6Z" fill="black"/>
 </svg>
         `
 
@@ -1147,7 +1164,9 @@ export function generateSettingsSection(appendingContainer) {
         generateDashboardPage(projects)
     })
     const timerIcon = generateIcon('timer')
-
+    timerIcon.addEventListener('click', ()=> {
+        createPomodoroTimer() 
+    })
 
     appendingContainer.append( dashboardIcon, themeIcon, timerIcon)
   }
@@ -1400,4 +1419,160 @@ function generateDefaultDashboardPage() {
 
     container.append(heading, text);
     return container;
+}
+
+let timerInterval; // Global variable for timer interval
+let remainingTime = 0; // Tracks remaining time when paused
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+}
+
+function startTimer(duration, display, label, onTimerEnd) {
+    remainingTime = duration; // Set remaining time
+
+    clearInterval(timerInterval); // Clear any existing timer
+    timerInterval = setInterval(() => {
+        display.textContent = formatTime(remainingTime); // Update the timer display
+
+        if (--remainingTime < 0) {
+            clearInterval(timerInterval); // Stop the timer
+            onTimerEnd(); // Call the callback when the timer ends
+        }
+    }, 1000);
+}
+
+function createTimerDisplay(timerLabel, initialTime, onTimerEnd) {
+    const projectPageContainer = document.querySelector('#app');
+
+    // Remove existing timer display if it exists
+    const existingTimer = projectPageContainer.querySelector('[data-time-remaining]');
+    if (existingTimer) existingTimer.remove();
+
+    const timeRemainingContainer = document.createElement('div');
+    timeRemainingContainer.setAttribute('data-time-remaining', '');
+    timeRemainingContainer.classList.add('time-remaining-container');
+
+    const timerLabelDisplay = document.createElement('span');
+    timerLabelDisplay.classList.add('timer-label');
+    timerLabelDisplay.textContent = timerLabel; // Display "Work" or "Pause"
+
+    const timerDisplay = document.createElement('div');
+    timerDisplay.classList.add('timer-display');
+    timerDisplay.textContent = formatTime(initialTime); // Initialize display with formatted time
+
+    const controlsContainer = document.createElement('div')
+
+    // Pause button
+    const pauseButton = generateIcon('hold');
+    pauseButton.classList.add('pause-icon');
+    pauseButton.addEventListener('click', () => {
+        clearInterval(timerInterval); // Pause the timer
+    });
+
+    // Play button (Resume the timer)
+    const playButton = generateIcon('play');
+    playButton.classList.add('play-icon');
+    playButton.addEventListener('click', () => {
+        if (remainingTime > 0) {
+            startTimer(remainingTime, timerDisplay, timerLabel, onTimerEnd); // Resume the timer
+        }
+    });
+
+    // Close button
+    const closeButton = generateIcon('close');
+    closeButton.classList.add('close-icon');
+    closeButton.addEventListener('click', () => {
+        clearInterval(timerInterval); // Stop the timer
+        timeRemainingContainer.remove(); // Remove display
+        remainingTime = 0; // Reset the remaining time
+    });
+
+    controlsContainer.append(playButton, pauseButton, closeButton)
+    timeRemainingContainer.append(timerLabelDisplay, timerDisplay, controlsContainer);
+    projectPageContainer.appendChild(timeRemainingContainer);
+
+    return timerDisplay; // Return the display element for updates
+}
+
+function createPomodoroTimer(defaultWorkTime = 40, defaultPauseTime = 20) {
+    const appendingContainer = document.querySelector('[data-dialog]');
+    appendingContainer.classList.add('active');
+
+    const dialog = document.createElement('dialog');
+    dialog.classList.add('pomodoro-dialog');
+
+    const modalHeader = document.createElement('div');
+    modalHeader.classList.add('modal-header');
+    const modalTitle = document.createElement('span');
+    modalTitle.textContent = 'Pomodoro Timer';
+
+    const closeButton = generateIcon('close');
+    closeButton.addEventListener('click', () => {
+        dialog.remove();
+        appendingContainer.classList.remove('active');
+    });
+
+    modalHeader.append(modalTitle, closeButton);
+
+    const pomodoroTimerContainer = document.createElement('div');
+
+    const wrapper1 = document.createElement('div');
+    const workLabel = document.createElement('span');
+    workLabel.textContent = 'Work';
+    const workInput = document.createElement('input');
+    workInput.min = 5;
+    workInput.max = 50;
+    workInput.value = defaultWorkTime;
+    workInput.setAttribute('type', 'number');
+    wrapper1.append(workLabel, workInput);
+
+    const wrapper2 = document.createElement('div');
+    const pauseInput = document.createElement('input');
+    pauseInput.setAttribute('type', 'number');
+    pauseInput.min = 10;
+    pauseInput.max = 55;
+    pauseInput.value = defaultPauseTime;
+    const pauseLabel = document.createElement('span');
+    pauseLabel.textContent = 'Pause';
+    wrapper2.append(pauseLabel, pauseInput);
+
+    pomodoroTimerContainer.append(wrapper1, wrapper2);
+
+    const controlsContainer = document.createElement('div');
+
+    function startWorkTimer() {
+        const workDuration = +workInput.value * 60;
+        const timerDisplay = createTimerDisplay('Work', workDuration, startPauseTimer);
+        startTimer(workDuration, timerDisplay, 'Work', startPauseTimer);
+    }
+
+    function startPauseTimer() {
+        const pauseDuration = +pauseInput.value * 60;
+        const timerDisplay = createTimerDisplay('Pause', pauseDuration, resetTimer);
+        startTimer(pauseDuration, timerDisplay, 'Pause', resetTimer);
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval); // Stop timer
+        const timeDisplay = document.querySelector('[data-time-remaining]');
+        if (timeDisplay) timeDisplay.remove(); // Remove display
+        remainingTime = 0; // Reset the remaining time
+    }
+
+    const startButton = generateIcon('play');
+    startButton.addEventListener('click', () => {
+        resetTimer(); // Clear any existing timer
+        dialog.remove();
+        appendingContainer.classList.remove('active');
+        startWorkTimer(); // Start the work timer
+    });
+
+    controlsContainer.append(startButton);
+    const wrapper = document.createElement('div');
+    wrapper.append(modalHeader, pomodoroTimerContainer, controlsContainer);
+    dialog.append(wrapper);
+    appendingContainer.append(dialog);
 }
