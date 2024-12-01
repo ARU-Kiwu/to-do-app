@@ -39,7 +39,17 @@ module.exports = {
             }
           }
         ]
-      }
+      },
+      {
+        test: /\.(mp3|wav|ogg)$/i, // Match audio file extensions
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[hash].[ext]', // Customize output file naming
+            outputPath: 'assets/audio/', // Output directory for audio files
+          },
+        },
+      },
     ],
   },
   mode: "development",

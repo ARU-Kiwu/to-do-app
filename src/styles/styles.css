@@ -1499,8 +1499,10 @@ button {
 
 .timer-display + div{
         width: 100%;
-        justify-content: space-around;
         display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding-top: 5px;
         svg path {
                 fill: var(--primary);
         }

@@ -1444,6 +1444,10 @@ function startTimer(duration, display, label, onTimerEnd) {
     }, 1000);
 }
 
+import timerSound from '../assets/sfx/timer.mp3';
+import finishSound from '../assets/sfx/finish.mp3';
+
+
 function createTimerDisplay(timerLabel, initialTime, onTimerEnd) {
     const projectPageContainer = document.querySelector('#app');
 
@@ -1501,6 +1505,9 @@ function createPomodoroTimer(defaultWorkTime = 40, defaultPauseTime = 20) {
     const appendingContainer = document.querySelector('[data-dialog]');
     appendingContainer.classList.add('active');
 
+    const sound = new Audio(timerSound)
+    const finish = new Audio(finishSound)
+
     const dialog = document.createElement('dialog');
     dialog.classList.add('pomodoro-dialog');
 
@@ -1547,9 +1554,11 @@ function createPomodoroTimer(defaultWorkTime = 40, defaultPauseTime = 20) {
         const workDuration = +workInput.value * 60;
         const timerDisplay = createTimerDisplay('Work', workDuration, startPauseTimer);
         startTimer(workDuration, timerDisplay, 'Work', startPauseTimer);
+       sound.play()
     }
 
     function startPauseTimer() {
+        finish.play()
         const pauseDuration = +pauseInput.value * 60;
         const timerDisplay = createTimerDisplay('Pause', pauseDuration, resetTimer);
         startTimer(pauseDuration, timerDisplay, 'Pause', resetTimer);
