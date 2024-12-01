@@ -1,0 +1,1 @@
+export default __webpack_public_path__ + "fonts/fonts/Inter-VariableFont_opsz,wght.ttf";
