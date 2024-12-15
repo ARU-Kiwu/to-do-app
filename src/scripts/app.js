@@ -31,7 +31,17 @@ export function app() {
         settingsContainer.setAttribute('data-settings', '')
         generateSettingsSection(settingsContainer)
         
-        projectsContainer.append(addProjectContainer, projectsDisplayContainer, settingsContainer)
+        const mobileExpandContainer = document.createElement('div')
+        mobileExpandContainer.classList.add('mobile-expand')
+        const mobileIcon = generateIcon('expand')
+        mobileExpandContainer.addEventListener('click', ()=> {
+            const projectsContainer = document.querySelector('[data-projectdisplay]')
+            projectsContainer.classList.add('active')
+        })
+        mobileExpandContainer.append(mobileIcon)
+
+
+        projectsContainer.append(addProjectContainer, mobileExpandContainer, projectsDisplayContainer, settingsContainer)
 
     // Create the page container to display project contents
     const projectPageContainer  = document.createElement('div')

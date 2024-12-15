@@ -299,6 +299,19 @@ export function renderProjectsIcons(projects) {
     const projectdisplay = document.querySelector('[data-projectdisplay]')
     projectdisplay.innerHTML = ''
 
+    const header = document.createElement('div')
+    header.classList.add('projectsDisplayHeader')
+    const title = document.createElement('p')
+    title.innerText = 'Projects'
+    const closeIcon = generateIcon('close')
+
+    closeIcon.addEventListener('click', ()=> {
+        const projectsContainer = document.querySelector('[data-projectdisplay]')
+        projectsContainer.classList.remove('active')
+    })
+    
+    header.append(title, closeIcon)
+    projectdisplay.append(header)
     for (let project of Object.values(projects)) {
         const icon = renderProjectIcon(project) 
         projectdisplay.append(icon)
@@ -322,6 +335,8 @@ export function removeProjectIcon(projectId) {
 
 
 export function renderProjectIcon(project) {
+    const projectDisplay = document.querySelector('[data-projectdisplay]')
+
     const projectIconElement = document.createElement('div')
     const projectIcon = createProjectIcon(project.icon)
     const projectTitleText = document.createElement('span')
@@ -332,6 +347,7 @@ export function renderProjectIcon(project) {
     projectIconElement.append(projectIcon, projectTitleText)
     //Generate Project Page with its to-dos
     projectIconElement.addEventListener('click', () => {
+        projectDisplay.classList.remove('active')
         generateProjectPage(project)
         if (project.done.length > 0) { setCompletedDisplayOn(project) }
         renderTodos(project)
@@ -579,7 +595,7 @@ export function createProjectDialog() {
     const projectTitleInputContainer = document.createElement('div')
     const titleInput = document.createElement('input')
     titleInput.setAttribute('type', 'text')
-    titleInput.setAttribute('maxlength', '32')
+    titleInput.setAttribute('maxlength', '20')
     titleInput.placeholder = 'Project Title'
 
     const label = document.createElement('label')
@@ -764,7 +780,6 @@ export function createAddToDoDialog(project) {
         let description = document.querySelector('.input-container > textarea').value
         const due = document.querySelector('input[type="date"]').value
         const priority = document.querySelector('.priority-container span').innerText
-        console.log(projectId, title, description, due, priorities)
 
         title === '' ? title = 'Nothing specified' : title = document.querySelector('.input-container > input').value
         description === '' ? description = 'No description set' : description = document.querySelector('.input-container > textarea').value
@@ -1099,7 +1114,6 @@ export function editToDoDialog(project, todo) {
     const dateInputText = document.createElement('span');
     dateInputText.classList.add('date-text');
     dateInputText.textContent = dateInput.value;
-    console.log(dateInput.value)
 
     taskDueContainer.addEventListener('click', () => {
         dateInput.showPicker ? dateInput.focus() : dateInput.blur();
@@ -1288,6 +1302,47 @@ export function generateDashboardPage(projects) {
             ease: "power3.out",
         }
     );
+
+    const recentProjectsContainer = document.createElement('div')
+    recentProjectsContainer.classList.add('recent-projects')
+    const recentProjectsHeader = createHeader('Recent Projects')
+    recentProjectsContainer.append(recentProjectsHeader)
+    for(let project in projects) {
+        const projectContainer = document.createElement('div')
+        const projectIcon = generateIcon(projects[project].icon)
+        const projectTitle = document.createElement('h4')
+        projectTitle.textContent = `${projects[project].name}`
+        projectContainer.append(projectIcon, projectTitle)
+        recentProjectsContainer.append(projectContainer)
+        projectContainer.addEventListener('click', ()=> {
+            generateProjectPage(projects[project])
+            renderTodos(projects[project])
+            gsap.fromTo(
+                '.todo',
+                { opacity: 0, y: -10 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    stagger: 0.2,
+                    ease: "power3.out",
+                }
+            );
+        })
+    }
+    
+    gsap.fromTo(
+        recentProjectsContainer.children,
+        { opacity: 0, y: 20 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.2,
+            ease: "power3.out",
+        }
+    );
+    dashboardElement.append(recentProjectsContainer)
 }
 
 export function rerenderMetrics(projects, infoContainer) {
@@ -1407,7 +1462,7 @@ function generateDefaultDashboardPage() {
     typewriterAnimation(heading, `Welcome to Memorizo`, 0.1);
 
     const text = document.createElement('p');
-    text.textContent = `There is currently no active project. You can create a new project by pressing the button on the top left`;
+    text.textContent = `There is currently no active project. You can create a new project by pressing the "+" button`;
 
     gsap.delayedCall(3, () => {
         gsap.fromTo(
